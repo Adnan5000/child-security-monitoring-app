@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Security App - UML Class Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+        .diagram-container {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            background: white;
+        }
+        svg {
+            background: white;
+        }
+        text {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+        }
+        .class-title {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .class-box {
+            fill: #e1d5e7;
+            stroke: #9673a6;
+            stroke-width: 2;
+        }
+        .separator {
+            stroke: #9673a6;
+            stroke-width: 1;
+        }
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #45a049;
+        }
+        .info-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        .info-box h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .info-box p {
+            margin: 5px 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .relationship {
+            stroke: #000;
+            stroke-width: 1.5;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        .association-text {
+            font-size: 10px;
+            fill: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <h3>📊 Class Diagram</h3>
+        <p><strong>Instructions:</strong></p>
+        <p>• Click "Download PNG" to save</p>
+        <p>• Or right-click diagram → Save Image</p>
+        <p>• Shows system architecture</p>
+    </div>
+    
+    <button class="download-btn" onclick="downloadPNG()">📥 Download PNG</button>
+    <button class="download-btn" onclick="downloadPNGAlternative()" style="top: 70px; background: #007bff;">📥 Download PNG (Alt)</button>
+    
+    <div class="diagram-container">
+        <svg width="4000" height="2800" xmlns="http://www.w3.org/2000/svg">
+            <!-- White background -->
+            <rect x="0" y="0" width="4000" height="2800" fill="white" stroke="none"/>
+            
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#000000" />
+                </marker>
+                <marker id="arrowhead-empty" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#FFFFFF" stroke="#000000" stroke-width="1" />
+                </marker>
+            </defs>
+            
+            <!-- Title -->
+            <text x="2000" y="30" text-anchor="middle" font-size="22" font-weight="bold" fill="#333">Child Security &amp; Monitoring App</text>
+            <text x="2000" y="55" text-anchor="middle" font-size="16" fill="#666">UML Class Diagram</text>
+            
+            <!-- User Class -->
+            <rect x="100" y="150" width="220" height="180" class="class-box" rx="5"/>
+            <text x="210" y="175" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="210" y="195" text-anchor="middle" class="class-title" fill="#333">User</text>
+            <line x1="110" y1="210" x2="310" y2="210" class="separator"/>
+            <text x="120" y="230" fill="#333">- userId: String</text>
+            <text x="120" y="250" fill="#333">- email: String</text>
+            <text x="120" y="270" fill="#333">- passwordHash: String</text>
+            <text x="120" y="290" fill="#333">- firstName: String</text>
+            <text x="120" y="310" fill="#333">- lastName: String</text>
+            <line x1="110" y1="325" x2="310" y2="325" class="separator"/>
+            <text x="120" y="345" fill="#333">+ register()</text>
+            <text x="120" y="365" fill="#333">+ login()</text>
+            <text x="120" y="385" fill="#333">+ logout()</text>
+            
+            <!-- Parent Class -->
+            <rect x="100" y="400" width="220" height="200" class="class-box" rx="5"/>
+            <text x="210" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="210" y="445" text-anchor="middle" class="class-title" fill="#333">Parent</text>
+            <line x1="110" y1="465" x2="310" y2="465" class="separator"/>
+            <text x="120" y="485" fill="#333">- phoneNumber: String</text>
+            <text x="120" y="505" fill="#333">- isVerified: Boolean</text>
+            <text x="120" y="525" fill="#333">- createdDate: DateTime</text>
+            <line x1="110" y1="540" x2="310" y2="540" class="separator"/>
+            <text x="120" y="560" fill="#333">+ createChildProfile()</text>
+            <text x="120" y="580" fill="#333">+ viewDashboard()</text>
+            <text x="120" y="600" fill="#333">+ manageContacts()</text>
+            
+            <!-- Child Class -->
+            <rect x="100" y="680" width="220" height="280" class="class-box" rx="5"/>
+            <text x="210" y="705" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="210" y="725" text-anchor="middle" class="class-title" fill="#333">Child</text>
+            <line x1="110" y1="745" x2="310" y2="745" class="separator"/>
+            <text x="120" y="765" fill="#333">- childId: String</text>
+            <text x="120" y="785" fill="#333">- name: String</text>
+            <text x="120" y="805" fill="#333">- age: Integer</text>
+            <text x="120" y="825" fill="#333">- deviceId: String</text>
+            <text x="120" y="845" fill="#333">- isActive: Boolean</text>
+            <line x1="110" y1="860" x2="310" y2="860" class="separator"/>
+            <text x="120" y="880" fill="#333">+ updateLocation()</text>
+            <text x="120" y="900" fill="#333">+ triggerEmergency()</text>
+            <text x="120" y="920" fill="#333">+ getLocation()</text>
+            <text x="120" y="940" fill="#333">+ sendAlert()</text>
+            
+            <!-- Location Class -->
+            <rect x="500" y="400" width="220" height="260" class="class-box" rx="5"/>
+            <text x="610" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="610" y="445" text-anchor="middle" class="class-title" fill="#333">Location</text>
+            <line x1="510" y1="465" x2="710" y2="465" class="separator"/>
+            <text x="520" y="485" fill="#333">- locationId: String</text>
+            <text x="520" y="505" fill="#333">- latitude: Double</text>
+            <text x="520" y="525" fill="#333">- longitude: Double</text>
+            <text x="520" y="545" fill="#333">- accuracy: Double</text>
+            <text x="520" y="565" fill="#333">- timestamp: DateTime</text>
+            <text x="520" y="585" fill="#333">- address: String</text>
+            <line x1="510" y1="600" x2="710" y2="600" class="separator"/>
+            <text x="520" y="620" fill="#333">+ recordLocation()</text>
+            <text x="520" y="640" fill="#333">+ getCurrentLocation()</text>
+            <text x="520" y="660" fill="#333">+ getHistory()</text>
+            
+            <!-- LocationHistory Class -->
+            <rect x="500" y="720" width="220" height="140" class="class-box" rx="5"/>
+            <text x="610" y="745" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="610" y="765" text-anchor="middle" class="class-title" fill="#333">LocationHistory</text>
+            <line x1="510" y1="785" x2="710" y2="785" class="separator"/>
+            <text x="520" y="805" fill="#333">- historyId: String</text>
+            <text x="520" y="825" fill="#333">- locations: List&lt;Location&gt;</text>
+            <line x1="510" y1="840" x2="710" y2="840" class="separator"/>
+            <text x="520" y="860" fill="#333">+ getLocationsByDateRange()</text>
+            
+            <!-- EmergencyContact Class -->
+            <rect x="900" y="400" width="220" height="220" class="class-box" rx="5"/>
+            <text x="1010" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="1010" y="445" text-anchor="middle" class="class-title" fill="#333">EmergencyContact</text>
+            <line x1="910" y1="465" x2="1110" y2="465" class="separator"/>
+            <text x="920" y="485" fill="#333">- contactId: String</text>
+            <text x="920" y="505" fill="#333">- name: String</text>
+            <text x="920" y="525" fill="#333">- phoneNumber: String</text>
+            <text x="920" y="545" fill="#333">- email: String</text>
+            <text x="920" y="565" fill="#333">- isVerified: Boolean</text>
+            <text x="920" y="585" fill="#333">- priority: Integer</text>
+            <line x1="910" y1="600" x2="1110" y2="600" class="separator"/>
+            <text x="920" y="620" fill="#333">+ verifyContact()</text>
+            
+            <!-- Alert Class -->
+            <rect x="1300" y="400" width="220" height="300" class="class-box" rx="5"/>
+            <text x="1410" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="1410" y="445" text-anchor="middle" class="class-title" fill="#333">Alert</text>
+            <line x1="1310" y1="465" x2="1510" y2="465" class="separator"/>
+            <text x="1320" y="485" fill="#333">- alertId: String</text>
+            <text x="1320" y="505" fill="#333">- alertType: AlertType</text>
+            <text x="1320" y="525" fill="#333">- location: Location</text>
+            <text x="1320" y="545" fill="#333">- timestamp: DateTime</text>
+            <text x="1320" y="565" fill="#333">- status: AlertStatus</text>
+            <text x="1320" y="585" fill="#333">- message: String</text>
+            <text x="1320" y="605" fill="#333">- childName: String</text>
+            <line x1="1310" y1="620" x2="1510" y2="620" class="separator"/>
+            <text x="1320" y="640" fill="#333">+ createAlert()</text>
+            <text x="1320" y="660" fill="#333">+ sendAlert()</text>
+            <text x="1320" y="680" fill="#333">+ acknowledgeAlert()</text>
+            
+            <!-- AlertDistribution Class -->
+            <rect x="1300" y="780" width="220" height="200" class="class-box" rx="5"/>
+            <text x="1410" y="805" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="1410" y="825" text-anchor="middle" class="class-title" fill="#333">AlertDistribution</text>
+            <line x1="1310" y1="845" x2="1510" y2="845" class="separator"/>
+            <text x="1320" y="865" fill="#333">- distributionId: String</text>
+            <text x="1320" y="885" fill="#333">- recipients: List&lt;Contact&gt;</text>
+            <line x1="1310" y1="900" x2="1510" y2="900" class="separator"/>
+            <text x="1320" y="920" fill="#333">+ sendSMS()</text>
+            <text x="1320" y="940" fill="#333">+ sendEmail()</text>
+            <text x="1320" y="960" fill="#333">+ sendPushNotification()</text>
+            
+            <!-- DeviceStatus Class -->
+            <rect x="1700" y="400" width="220" height="220" class="class-box" rx="5"/>
+            <text x="1810" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="1810" y="445" text-anchor="middle" class="class-title" fill="#333">DeviceStatus</text>
+            <line x1="1710" y1="465" x2="1910" y2="465" class="separator"/>
+            <text x="1720" y="485" fill="#333">- deviceId: String</text>
+            <text x="1720" y="505" fill="#333">- batteryLevel: Integer</text>
+            <text x="1720" y="525" fill="#333">- networkStatus: String</text>
+            <text x="1720" y="545" fill="#333">- appStatus: String</text>
+            <text x="1720" y="565" fill="#333">- lastUpdate: DateTime</text>
+            <line x1="1710" y1="580" x2="1910" y2="580" class="separator"/>
+            <text x="1720" y="600" fill="#333">+ updateStatus()</text>
+            <text x="1720" y="620" fill="#333">+ checkBatteryLevel()</text>
+            
+            <!-- ShakeDetector Class -->
+            <rect x="2100" y="400" width="220" height="200" class="class-box" rx="5"/>
+            <text x="2210" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="2210" y="445" text-anchor="middle" class="class-title" fill="#333">ShakeDetector</text>
+            <line x1="2110" y1="465" x2="2310" y2="465" class="separator"/>
+            <text x="2120" y="485" fill="#333">- sensitivity: Double</text>
+            <text x="2120" y="505" fill="#333">- threshold: Double</text>
+            <text x="2120" y="525" fill="#333">- isEnabled: Boolean</text>
+            <line x1="2110" y1="540" x2="2310" y2="540" class="separator"/>
+            <text x="2120" y="560" fill="#333">+ detectShake()</text>
+            <text x="2120" y="580" fill="#333">+ configureSensitivity()</text>
+            
+            <!-- AuthenticationService Class -->
+            <rect x="2500" y="150" width="220" height="200" class="class-box" rx="5"/>
+            <text x="2610" y="175" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="2610" y="195" text-anchor="middle" class="class-title" fill="#333">AuthenticationService</text>
+            <line x1="2510" y1="215" x2="2710" y2="215" class="separator"/>
+            <text x="2520" y="235" fill="#333">+ authenticate()</text>
+            <text x="2520" y="255" fill="#333">+ generateToken()</text>
+            <text x="2520" y="275" fill="#333">+ validateToken()</text>
+            <text x="2520" y="295" fill="#333">+ hashPassword()</text>
+            <text x="2520" y="315" fill="#333">+ verifyPassword()</text>
+            <line x1="2510" y1="330" x2="2710" y2="330" class="separator"/>
+            <text x="2520" y="350" fill="#333">&lt;&lt;static&gt;&gt;</text>
+            
+            <!-- LocationService Class -->
+            <rect x="2500" y="400" width="220" height="240" class="class-box" rx="5"/>
+            <text x="2610" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="2610" y="445" text-anchor="middle" class="class-title" fill="#333">LocationService</text>
+            <line x1="2510" y1="465" x2="2710" y2="465" class="separator"/>
+            <text x="2520" y="485" fill="#333">+ startTracking()</text>
+            <text x="2520" y="505" fill="#333">+ stopTracking()</text>
+            <text x="2520" y="525" fill="#333">+ getCurrentLocation()</text>
+            <text x="2520" y="545" fill="#333">+ getLocationHistory()</text>
+            <text x="2520" y="565" fill="#333">+ updateLocationInterval()</text>
+            <line x1="2510" y1="580" x2="2710" y2="580" class="separator"/>
+            <text x="2520" y="600" fill="#333">&lt;&lt;static&gt;&gt;</text>
+            <text x="2520" y="620" fill="#333">&lt;&lt;service&gt;&gt;</text>
+            
+            <!-- DashboardService Class -->
+            <rect x="2900" y="400" width="220" height="200" class="class-box" rx="5"/>
+            <text x="3010" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="3010" y="445" text-anchor="middle" class="class-title" fill="#333">DashboardService</text>
+            <line x1="2910" y1="465" x2="3110" y2="465" class="separator"/>
+            <text x="2920" y="485" fill="#333">+ getChildLocation()</text>
+            <text x="2920" y="505" fill="#333">+ getLocationHistory()</text>
+            <text x="2920" y="525" fill="#333">+ getAlertLog()</text>
+            <text x="2920" y="545" fill="#333">+ getDeviceStatus()</text>
+            <line x1="2910" y1="560" x2="3110" y2="560" class="separator"/>
+            <text x="2920" y="580" fill="#333">&lt;&lt;service&gt;&gt;</text>
+            
+            <!-- NotificationService Class -->
+            <rect x="3300" y="400" width="220" height="240" class="class-box" rx="5"/>
+            <text x="3410" y="425" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;class&gt;&gt;</text>
+            <text x="3410" y="445" text-anchor="middle" class="class-title" fill="#333">NotificationService</text>
+            <line x1="3310" y1="465" x2="3510" y2="465" class="separator"/>
+            <text x="3320" y="485" fill="#333">+ sendPushNotification()</text>
+            <text x="3320" y="505" fill="#333">+ sendSMS()</text>
+            <text x="3320" y="525" fill="#333">+ sendEmail()</text>
+            <text x="3320" y="545" fill="#333">+ scheduleNotification()</text>
+            <line x1="3310" y1="560" x2="3510" y2="560" class="separator"/>
+            <text x="3320" y="580" fill="#333">&lt;&lt;service&gt;&gt;</text>
+            <text x="3320" y="600" fill="#333">&lt;&lt;static&gt;&gt;</text>
+            
+            <!-- Enums -->
+            <rect x="500" y="150" width="220" height="100" class="class-box" rx="5"/>
+            <text x="610" y="175" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;enumeration&gt;&gt;</text>
+            <text x="610" y="195" text-anchor="middle" class="class-title" fill="#333">AlertType</text>
+            <line x1="510" y1="215" x2="710" y2="215" class="separator"/>
+            <text x="520" y="235" fill="#333">SHAKE_TRIGGER</text>
+            <text x="520" y="255" fill="#333">SOS_BUTTON</text>
+            
+            <rect x="900" y="150" width="220" height="100" class="class-box" rx="5"/>
+            <text x="1010" y="175" text-anchor="middle" class="class-title" fill="#333">&lt;&lt;enumeration&gt;&gt;</text>
+            <text x="1010" y="195" text-anchor="middle" class="class-title" fill="#333">AlertStatus</text>
+            <line x1="910" y1="215" x2="1110" y2="215" class="separator"/>
+            <text x="920" y="235" fill="#333">PENDING</text>
+            <text x="920" y="255" fill="#333">SENT</text>
+            <text x="920" y="275" fill="#333">ACKNOWLEDGED</text>
+            
+            <!-- RELATIONSHIPS -->
+            <!-- User to Parent (Inheritance) -->
+            <line x1="210" y1="330" x2="210" y2="400" class="relationship"/>
+            <polygon points="215,400 205,400 210,410" fill="#000" stroke="#000"/>
+            
+            <!-- Parent to Child (1 to many) -->
+            <line x1="320" y1="500" x2="100" y2="680" class="relationship"/>
+            <text x="200" y="590" font-size="10" fill="#333">1</text>
+            <text x="180" y="570" font-size="10" fill="#333">*</text>
+            
+            <!-- Child to Location (1 to many) -->
+            <line x1="320" y1="820" x2="500" y2="530" class="relationship"/>
+            <text x="410" y="680" font-size="10" fill="#333">1</text>
+            <text x="430" y="660" font-size="10" fill="#333">*</text>
+            
+            <!-- Location to LocationHistory -->
+            <line x1="610" y1="660" x2="610" y2="720" class="relationship"/>
+            <text x="620" y="690" font-size="10" fill="#333">*</text>
+            <text x="600" y="690" font-size="10" fill="#333">1</text>
+            
+            <!-- Parent to EmergencyContact (1 to many) -->
+            <line x1="320" y1="500" x2="900" y2="510" class="relationship"/>
+            <text x="600" y="505" font-size="10" fill="#333">1</text>
+            <text x="620" y="505" font-size="10" fill="#333">*</text>
+            
+            <!-- Child to Alert (1 to many) -->
+            <line x1="320" y1="820" x2="1300" y2="550" class="relationship"/>
+            <text x="800" y="690" font-size="10" fill="#333">1</text>
+            <text x="820" y="670" font-size="10" fill="#333">*</text>
+            
+            <!-- Alert to Location -->
+            <line x1="1300" y1="525" x2="720" y2="510" class="relationship"/>
+            <text x="1010" y="515" font-size="10" fill="#333">1</text>
+            
+            <!-- Alert to AlertDistribution -->
+            <line x1="1410" y1="700" x2="1410" y2="780" class="relationship"/>
+            <text x="1420" y="740" font-size="10" fill="#333">1</text>
+            <text x="1420" y="720" font-size="10" fill="#333">1</text>
+            
+            <!-- AlertDistribution to EmergencyContact (many to many) -->
+            <line x1="1300" y1="870" x2="900" y2="510" class="relationship"/>
+            <text x="1100" y="690" font-size="10" fill="#333">*</text>
+            <text x="1120" y="690" font-size="10" fill="#333">*</text>
+            
+            <!-- Child to DeviceStatus -->
+            <line x1="320" y1="820" x2="1700" y2="510" class="relationship"/>
+            <text x="1010" y="670" font-size="10" fill="#333">1</text>
+            <text x="1030" y="650" font-size="10" fill="#333">1</text>
+            
+            <!-- Child to ShakeDetector -->
+            <line x1="320" y1="820" x2="2100" y2="500" class="relationship"/>
+            <text x="1210" y="660" font-size="10" fill="#333">1</text>
+            <text x="1230" y="640" font-size="10" fill="#333">1</text>
+            
+            <!-- ShakeDetector to Alert -->
+            <line x1="2320" y1="500" x2="1520" y2="550" class="relationship"/>
+            <text x="1920" y="520" font-size="10" fill="#333">creates</text>
+            
+            <!-- AlertType enum to Alert -->
+            <line x1="720" y1="200" x2="1300" y2="505" class="relationship"/>
+            <text x="1010" y="350" font-size="10" fill="#333">uses</text>
+            
+            <!-- AlertStatus enum to Alert -->
+            <line x1="1120" y1="200" x2="1300" y2="565" class="relationship"/>
+            <text x="1210" y="380" font-size="10" fill="#333">uses</text>
+            
+            <!-- Services relationships (dashed lines for dependencies) -->
+            <line x1="230" y1="500" x2="2500" y2="250" stroke="#666" stroke-width="1.5" stroke-dasharray="5,5" fill="none"/>
+            <text x="1365" y="375" font-size="9" fill="#666">uses</text>
+            
+            <line x1="610" y1="530" x2="2500" y2="520" stroke="#666" stroke-width="1.5" stroke-dasharray="5,5" fill="none"/>
+            
+            <line x1="3010" y1="500" x2="1410" y2="550" stroke="#666" stroke-width="1.5" stroke-dasharray="5,5" fill="none"/>
+            
+            <line x1="3410" y1="465" x2="1410" y2="620" stroke="#666" stroke-width="1.5" stroke-dasharray="5,5" fill="none"/>
+            
+        </svg>
+    </div>
+    
+    <script>
+        function downloadPNG() {
+            const svg = document.querySelector('svg');
+            
+            const svgClone = svg.cloneNode(true);
+            svgClone.setAttribute('width', '4000');
+            svgClone.setAttribute('height', '2800');
+            svgClone.setAttribute('style', 'background-color: white;');
+            
+            let svgData = new XMLSerializer().serializeToString(svgClone);
+            
+            if (!svgData.includes('xmlns')) {
+                svgData = svgData.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            
+            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(svgBlob);
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            const scale = 2;
+            canvas.width = 4000 * scale;
+            canvas.height = 2800 * scale;
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            img.onload = function() {
+                try {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const downloadUrl = URL.createObjectURL(blob);
+                            const downloadLink = document.createElement('a');
+                            downloadLink.download = 'ChildSecurity_Class_Diagram.png';
+                            downloadLink.href = downloadUrl;
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                            
+                            setTimeout(() => {
+                                URL.revokeObjectURL(downloadUrl);
+                                URL.revokeObjectURL(url);
+                            }, 100);
+                            
+                            const btn = document.querySelector('.download-btn');
+                            const originalText = btn.textContent;
+                            btn.textContent = '✓ Downloaded!';
+                            btn.style.background = '#28a745';
+                            setTimeout(() => {
+                                btn.textContent = originalText;
+                                btn.style.background = '#4CAF50';
+                            }, 2000);
+                        } else {
+                            alert('Error: Could not generate PNG. Please try again.');
+                        }
+                    }, 'image/png', 1.0);
+                } catch (e) {
+                    console.error('Error rendering:', e);
+                    alert('Error rendering image. Please try using browser screenshot instead.');
+                }
+            };
+            
+            img.onerror = function(e) {
+                console.error('Image load error:', e);
+                alert('Error loading SVG. Please try:\n1. Right-click on diagram → Save Image As\n2. Or use browser screenshot tools');
+                URL.revokeObjectURL(url);
+            };
+            
+            img.crossOrigin = 'anonymous';
+            img.src = url;
+        }
+        
+        function downloadPNGAlternative() {
+            const svg = document.querySelector('svg');
+            
+            const svgClone = svg.cloneNode(true);
+            svgClone.setAttribute('version', '1.1');
+            svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+            svgClone.setAttribute('width', '4000');
+            svgClone.setAttribute('height', '2800');
+            
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svgClone);
+            
+            svgString = svgString.replace(/fill="currentColor"/g, 'fill="#000"');
+            
+            const base64 = btoa(unescape(encodeURIComponent(svgString)));
+            const svgDataUrl = 'data:image/svg+xml;base64,' + base64;
+            
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const scale = 2;
+                canvas.width = 4000 * scale;
+                canvas.height = 2800 * scale;
+                
+                const ctx = canvas.getContext('2d');
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                setTimeout(() => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'ChildSecurity_Class_Diagram.png';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            
+                            const btns = document.querySelectorAll('.download-btn');
+                            const altBtn = Array.from(btns).find(b => b.textContent.includes('Alt'));
+                            if (altBtn) {
+                                const originalText = altBtn.textContent;
+                                altBtn.textContent = '✓ Downloaded!';
+                                altBtn.style.background = '#28a745';
+                                setTimeout(() => {
+                                    altBtn.textContent = originalText;
+                                    altBtn.style.background = '#007bff';
+                                }, 2000);
+                            }
+                        }
+                    }, 'image/png', 1.0);
+                }, 100);
+            };
+            
+            img.onerror = function() {
+                alert('Alternative method failed. Please try:\n1. Right-click diagram → Save Image\n2. Use browser screenshot');
+            };
+            
+            img.src = svgDataUrl;
+        }
+    </script>
+</body>
+</html>
+

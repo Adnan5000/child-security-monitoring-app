@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Security App - UML Use Case Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+        .diagram-container {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            background: white;
+        }
+        svg {
+            background: white;
+        }
+        text {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .package-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .use-case {
+            fill: #e1d5e7;
+            stroke: #9673a6;
+            stroke-width: 2;
+        }
+        .actor {
+            fill: #dae8fc;
+            stroke: #6c8ebf;
+            stroke-width: 2;
+        }
+        .system-actor {
+            fill: #d5e8d4;
+            stroke: #82b366;
+            stroke-width: 2;
+        }
+        .contact-actor {
+            fill: #ffe6cc;
+            stroke: #d79b00;
+            stroke-width: 2;
+        }
+        .package {
+            fill: #f5f5f5;
+            stroke: #666666;
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+        }
+        .system-package {
+            fill: #fff2cc;
+            stroke: #d6b656;
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+        }
+        .association {
+            stroke: #000000;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        .include-arrow {
+            stroke: #ff0000;
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+            fill: none;
+            marker-end: url(#arrowhead-red);
+        }
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #45a049;
+        }
+        .info-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        .info-box h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .info-box p {
+            margin: 5px 0;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <h3>📊 Use Case Diagram</h3>
+        <p><strong>Instructions:</strong></p>
+        <p>• Click "Download PNG" button to save</p>
+        <p>• Or right-click diagram → Save Image</p>
+        <p>• Zoom in/out using browser controls</p>
+    </div>
+    
+        <button class="download-btn" onclick="downloadPNG()">📥 Download PNG</button>
+        <button class="download-btn" onclick="downloadPNGAlternative()" style="top: 70px; background: #007bff;">📥 Download PNG (Alt)</button>
+    
+    <div class="diagram-container">
+        <svg width="3500" height="2200" xmlns="http://www.w3.org/2000/svg">
+            <!-- White background rect for proper rendering -->
+            <rect x="0" y="0" width="3500" height="2200" fill="white" stroke="none"/>
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#000000" />
+                </marker>
+                <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#ff0000" />
+                </marker>
+            </defs>
+            
+            <!-- Title -->
+            <text x="1750" y="30" text-anchor="middle" font-size="22" font-weight="bold" fill="#333">Child Security &amp; Monitoring App</text>
+            <text x="1750" y="55" text-anchor="middle" font-size="16" fill="#666">UML Use Case Diagram</text>
+            
+            <!-- ACTORS -->
+            <!-- Parent Actor -->
+            <g id="parent-actor">
+                <circle cx="150" cy="500" r="25" class="actor"/>
+                <line x1="150" y1="525" x2="150" y2="600" stroke="#6c8ebf" stroke-width="3"/>
+                <line x1="150" y1="600" x2="100" y2="650" stroke="#6c8ebf" stroke-width="3"/>
+                <line x1="150" y1="600" x2="200" y2="650" stroke="#6c8ebf" stroke-width="3"/>
+                <text x="150" y="575" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Parent/Guardian</text>
+            </g>
+            
+            <!-- Child Actor -->
+            <g id="child-actor">
+                <circle cx="150" cy="1400" r="25" class="actor"/>
+                <line x1="150" y1="1425" x2="150" y2="1500" stroke="#6c8ebf" stroke-width="3"/>
+                <line x1="150" y1="1500" x2="100" y2="1550" stroke="#6c8ebf" stroke-width="3"/>
+                <line x1="150" y1="1500" x2="200" y2="1550" stroke="#6c8ebf" stroke-width="3"/>
+                <text x="150" y="1475" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Child User</text>
+            </g>
+            
+            <!-- System Actor -->
+            <g id="system-actor">
+                <circle cx="3350" cy="500" r="25" class="system-actor"/>
+                <line x1="3350" y1="525" x2="3350" y2="600" stroke="#82b366" stroke-width="3"/>
+                <line x1="3350" y1="600" x2="3300" y2="650" stroke="#82b366" stroke-width="3"/>
+                <line x1="3350" y1="600" x2="3400" y2="650" stroke="#82b366" stroke-width="3"/>
+                <text x="3350" y="575" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">System</text>
+            </g>
+            
+            <!-- Emergency Contact Actor -->
+            <g id="contact-actor">
+                <circle cx="3350" cy="1400" r="25" class="contact-actor"/>
+                <line x1="3350" y1="1425" x2="3350" y2="1500" stroke="#d79b00" stroke-width="3"/>
+                <line x1="3350" y1="1500" x2="3300" y2="1550" stroke="#d79b00" stroke-width="3"/>
+                <line x1="3350" y1="1500" x2="3400" y2="1550" stroke="#d79b00" stroke-width="3"/>
+                <text x="3350" y="1475" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">Emergency Contact</text>
+            </g>
+            
+            <!-- PACKAGES -->
+            <!-- Authentication Package -->
+            <rect x="400" y="150" width="320" height="240" class="package" rx="5"/>
+            <text x="560" y="180" text-anchor="middle" class="package-title" fill="#333">Authentication &amp; Authorization</text>
+            <ellipse cx="480" cy="220" rx="75" ry="25" class="use-case"/>
+            <text x="480" y="225" text-anchor="middle" font-size="10" fill="#333">Register Account</text>
+            <ellipse cx="480" cy="270" rx="60" ry="25" class="use-case"/>
+            <text x="480" y="275" text-anchor="middle" font-size="10" fill="#333">Login</text>
+            <ellipse cx="480" cy="320" rx="60" ry="25" class="use-case"/>
+            <text x="480" y="325" text-anchor="middle" font-size="10" fill="#333">Logout</text>
+            <ellipse cx="480" cy="370" rx="95" ry="25" class="use-case"/>
+            <text x="480" y="375" text-anchor="middle" font-size="9" fill="#333">Secure Password</text>
+            
+            <!-- Profile Management Package -->
+            <rect x="800" y="150" width="320" height="280" class="package" rx="5"/>
+            <text x="960" y="180" text-anchor="middle" class="package-title" fill="#333">Profile Management</text>
+            <ellipse cx="880" cy="220" rx="80" ry="25" class="use-case"/>
+            <text x="880" y="225" text-anchor="middle" font-size="10" fill="#333">Create Child Profile</text>
+            <ellipse cx="880" cy="270" rx="75" ry="25" class="use-case"/>
+            <text x="880" y="275" text-anchor="middle" font-size="10" fill="#333">Edit Child Profile</text>
+            <ellipse cx="880" cy="320" rx="85" ry="25" class="use-case"/>
+            <text x="880" y="325" text-anchor="middle" font-size="10" fill="#333">Delete Child Profile</text>
+            <ellipse cx="880" cy="370" rx="100" ry="25" class="use-case"/>
+            <text x="880" y="375" text-anchor="middle" font-size="9" fill="#333">Manage Multiple Children</text>
+            <ellipse cx="880" cy="420" rx="105" ry="25" class="use-case"/>
+            <text x="880" y="425" text-anchor="middle" font-size="9" fill="#333">Switch Between Children</text>
+            
+            <!-- Location Tracking Package -->
+            <rect x="400" y="550" width="320" height="320" class="package" rx="5"/>
+            <text x="560" y="580" text-anchor="middle" class="package-title" fill="#333">Location Tracking</text>
+            <ellipse cx="480" cy="630" rx="95" ry="25" class="use-case"/>
+            <text x="480" y="635" text-anchor="middle" font-size="9" fill="#333">Continuous GPS Recording</text>
+            <ellipse cx="480" cy="680" rx="110" ry="25" class="use-case"/>
+            <text x="480" y="685" text-anchor="middle" font-size="9" fill="#333">Background Location Updates</text>
+            <ellipse cx="480" cy="730" rx="110" ry="25" class="use-case"/>
+            <text x="480" y="735" text-anchor="middle" font-size="9" fill="#333">View Real-time Location</text>
+            <ellipse cx="480" cy="780" rx="100" ry="25" class="use-case"/>
+            <text x="480" y="785" text-anchor="middle" font-size="9" fill="#333">View Location History</text>
+            <ellipse cx="480" cy="830" rx="95" ry="25" class="use-case"/>
+            <text x="480" y="835" text-anchor="middle" font-size="9" fill="#333">View Location on Map</text>
+            <ellipse cx="480" cy="880" rx="105" ry="25" class="use-case"/>
+            <text x="480" y="885" text-anchor="middle" font-size="9" fill="#333">Track Location Timestamps</text>
+            
+            <!-- Emergency Features Package -->
+            <rect x="800" y="550" width="320" height="280" class="package" rx="5"/>
+            <text x="960" y="580" text-anchor="middle" class="package-title" fill="#333">Emergency Features</text>
+            <ellipse cx="880" cy="630" rx="95" ry="25" class="use-case"/>
+            <text x="880" y="635" text-anchor="middle" font-size="9" fill="#333">Shake Trigger Detection</text>
+            <ellipse cx="880" cy="680" rx="115" ry="25" class="use-case"/>
+            <text x="880" y="685" text-anchor="middle" font-size="9" fill="#333">Configure Shake Sensitivity</text>
+            <ellipse cx="880" cy="730" rx="100" ry="25" class="use-case"/>
+            <text x="880" y="735" text-anchor="middle" font-size="9" fill="#333">Emergency SOS Button</text>
+            <ellipse cx="880" cy="780" rx="85" ry="25" class="use-case"/>
+            <text x="880" y="785" text-anchor="middle" font-size="9" fill="#333">Trigger Alarm/Alert</text>
+            <ellipse cx="880" cy="830" rx="100" ry="25" class="use-case"/>
+            <text x="880" y="835" text-anchor="middle" font-size="9" fill="#333">Send Emergency Alert</text>
+            
+            <!-- Contact Management Package -->
+            <rect x="1200" y="150" width="320" height="280" class="package" rx="5"/>
+            <text x="1360" y="180" text-anchor="middle" class="package-title" fill="#333">Contact Management</text>
+            <ellipse cx="1280" cy="220" rx="95" ry="25" class="use-case"/>
+            <text x="1280" y="225" text-anchor="middle" font-size="9" fill="#333">Add Emergency Contact</text>
+            <ellipse cx="1280" cy="270" rx="95" ry="25" class="use-case"/>
+            <text x="1280" y="275" text-anchor="middle" font-size="9" fill="#333">Edit Emergency Contact</text>
+            <ellipse cx="1280" cy="320" rx="100" ry="25" class="use-case"/>
+            <text x="1280" y="325" text-anchor="middle" font-size="9" fill="#333">Delete Emergency Contact</text>
+            <ellipse cx="1280" cy="370" rx="115" ry="25" class="use-case"/>
+            <text x="1280" y="375" text-anchor="middle" font-size="9" fill="#333">Verify Contact Phone/Email</text>
+            <ellipse cx="1280" cy="420" rx="130" ry="25" class="use-case"/>
+            <text x="1280" y="425" text-anchor="middle" font-size="8" fill="#333">Set Primary/Secondary Contact</text>
+            
+            <!-- Dashboard Package -->
+            <rect x="1200" y="550" width="320" height="280" class="package" rx="5"/>
+            <text x="1360" y="580" text-anchor="middle" class="package-title" fill="#333">Parent Dashboard</text>
+            <ellipse cx="1280" cy="630" rx="110" ry="25" class="use-case"/>
+            <text x="1280" y="635" text-anchor="middle" font-size="9" fill="#333">View Real-time Child Location</text>
+            <ellipse cx="1280" cy="680" rx="115" ry="25" class="use-case"/>
+            <text x="1280" y="685" text-anchor="middle" font-size="9" fill="#333">View Recent Location History</text>
+            <ellipse cx="1280" cy="730" rx="110" ry="25" class="use-case"/>
+            <text x="1280" y="735" text-anchor="middle" font-size="9" fill="#333">View Emergency Alert Log</text>
+            <ellipse cx="1280" cy="780" rx="95" ry="25" class="use-case"/>
+            <text x="1280" y="785" text-anchor="middle" font-size="9" fill="#333">View Battery Status</text>
+            <ellipse cx="1280" cy="830" rx="110" ry="25" class="use-case"/>
+            <text x="1280" y="835" text-anchor="middle" font-size="9" fill="#333">View Family Dashboard</text>
+            
+            <!-- Device Monitoring Package -->
+            <rect x="1600" y="150" width="320" height="240" class="package" rx="5"/>
+            <text x="1760" y="180" text-anchor="middle" class="package-title" fill="#333">Device Status Monitoring</text>
+            <ellipse cx="1680" cy="220" rx="95" ry="25" class="use-case"/>
+            <text x="1680" y="225" text-anchor="middle" font-size="9" fill="#333">Monitor Battery Level</text>
+            <ellipse cx="1680" cy="270" rx="125" ry="25" class="use-case"/>
+            <text x="1680" y="275" text-anchor="middle" font-size="9" fill="#333">Monitor Network Connectivity</text>
+            <ellipse cx="1680" cy="320" rx="70" ry="25" class="use-case"/>
+            <text x="1680" y="325" text-anchor="middle" font-size="9" fill="#333">Monitor App Status</text>
+            <ellipse cx="1680" cy="370" rx="90" ry="25" class="use-case"/>
+            <text x="1680" y="375" text-anchor="middle" font-size="9" fill="#333">Low Battery Alerts</text>
+            
+            <!-- Communication Features Package -->
+            <rect x="1600" y="450" width="320" height="120" class="package" rx="5"/>
+            <text x="1760" y="480" text-anchor="middle" class="package-title" fill="#333">Communication Features</text>
+            <ellipse cx="1680" cy="520" rx="110" ry="25" class="use-case"/>
+            <text x="1680" y="525" text-anchor="middle" font-size="9" fill="#333">Emergency SOS Button</text>
+            
+            <!-- System Features Package -->
+            <rect x="2000" y="550" width="320" height="320" class="system-package" rx="5"/>
+            <text x="2160" y="580" text-anchor="middle" class="package-title" fill="#333">System Features (Automated)</text>
+            <ellipse cx="2080" cy="630" rx="95" ry="25" class="use-case"/>
+            <text x="2080" y="635" text-anchor="middle" font-size="9" fill="#333">Monitor Battery Level</text>
+            <ellipse cx="2080" cy="680" rx="125" ry="25" class="use-case"/>
+            <text x="2080" y="685" text-anchor="middle" font-size="9" fill="#333">Monitor Network Connectivity</text>
+            <ellipse cx="2080" cy="730" rx="90" ry="25" class="use-case"/>
+            <text x="2080" y="735" text-anchor="middle" font-size="9" fill="#333">Route Deviation Alert</text>
+            <ellipse cx="2080" cy="780" rx="95" ry="25" class="use-case"/>
+            <text x="2080" y="785" text-anchor="middle" font-size="9" fill="#333">Stuck/Immobile Alert</text>
+            <ellipse cx="2080" cy="830" rx="135" ry="25" class="use-case"/>
+            <text x="2080" y="835" text-anchor="middle" font-size="9" fill="#333">Distribute Alerts</text>
+            <ellipse cx="2080" cy="880" rx="130" ry="25" class="use-case"/>
+            <text x="2080" y="885" text-anchor="middle" font-size="9" fill="#333">Alert Confirmation</text>
+            
+            <!-- Advanced Alerts Package -->
+            <rect x="2000" y="200" width="320" height="200" class="package" rx="5"/>
+            <text x="2160" y="230" text-anchor="middle" class="package-title" fill="#333">Advanced Alerts</text>
+            <ellipse cx="2080" cy="280" rx="110" ry="25" class="use-case"/>
+            <text x="2080" y="285" text-anchor="middle" font-size="9" fill="#333">Route Deviation Alert</text>
+            <ellipse cx="2080" cy="330" rx="95" ry="25" class="use-case"/>
+            <text x="2080" y="335" text-anchor="middle" font-size="9" fill="#333">Stuck/Immobile Alert</text>
+            
+            <!-- Notifications Package -->
+            <rect x="2400" y="200" width="320" height="160" class="package" rx="5"/>
+            <text x="2560" y="230" text-anchor="middle" class="package-title" fill="#333">Notifications &amp; Reminders</text>
+            <ellipse cx="2480" cy="280" rx="130" ry="25" class="use-case"/>
+            <text x="2480" y="285" text-anchor="middle" font-size="9" fill="#333">Arrived Safely Notifications</text>
+            
+            <!-- ASSOCIATIONS - Parent to Use Cases -->
+            <line x1="200" y1="500" x2="405" y2="220" class="association"/>
+            <line x1="200" y1="500" x2="405" y2="270" class="association"/>
+            <line x1="250" y1="500" x2="815" y2="220" class="association"/>
+            <line x1="250" y1="500" x2="815" y2="270" class="association"/>
+            <line x1="280" y1="500" x2="1195" y2="220" class="association"/>
+            <line x1="280" y1="500" x2="1195" y2="270" class="association"/>
+            <line x1="200" y1="500" x2="405" y2="730" class="association"/>
+            <line x1="280" y1="500" x2="1195" y2="630" class="association"/>
+            <line x1="280" y1="500" x2="1595" y2="220" class="association"/>
+            
+            <!-- ASSOCIATIONS - Child to Use Cases -->
+            <line x1="200" y1="1400" x2="815" y2="630" class="association"/>
+            <line x1="200" y1="1400" x2="815" y2="730" class="association"/>
+            <line x1="200" y1="1400" x2="1595" y2="520" class="association"/>
+            <line x1="200" y1="1400" x2="405" y2="630" class="association"/>
+            
+            <!-- ASSOCIATIONS - System to Use Cases -->
+            <line x1="3325" y1="500" x2="2395" y2="630" class="association"/>
+            <line x1="3325" y1="500" x2="2395" y2="730" class="association"/>
+            <line x1="3325" y1="500" x2="2395" y2="780" class="association"/>
+            <line x1="3325" y1="500" x2="2395" y2="830" class="association"/>
+            
+            <!-- ASSOCIATIONS - Emergency Contact to Use Cases -->
+            <line x1="3325" y1="1400" x2="3050" y2="750" class="association"/>
+            <text x="3180" y="1080" font-size="10" fill="#000">Receive Location Alert</text>
+            <line x1="3325" y1="1400" x2="3050" y2="800" class="association"/>
+            <text x="3180" y="1100" font-size="10" fill="#000">Acknowledge Alert</text>
+            
+            <!-- INCLUDE RELATIONSHIPS -->
+            <line x1="880" y1="830" x2="880" y2="780" class="include-arrow"/>
+            <text x="890" y="810" font-size="9" fill="#ff0000">&lt;&lt;include&gt;&gt;</text>
+            
+            <line x1="880" y1="780" x2="880" y2="630" class="include-arrow"/>
+            <line x1="880" y1="730" x2="880" y2="780" class="include-arrow"/>
+            
+            <line x1="480" y1="730" x2="480" y2="830" class="include-arrow"/>
+            <text x="490" y="780" font-size="9" fill="#ff0000">&lt;&lt;include&gt;&gt;</text>
+            
+            <line x1="1280" y1="630" x2="480" y2="730" class="include-arrow"/>
+            <text x="880" y="700" font-size="9" fill="#ff0000">&lt;&lt;include&gt;&gt;</text>
+            
+        </svg>
+    </div>
+    
+    <script>
+        function downloadPNG() {
+            const svg = document.querySelector('svg');
+            
+            // Clone the SVG to avoid modifying the original
+            const svgClone = svg.cloneNode(true);
+            
+            // Set explicit dimensions
+            svgClone.setAttribute('width', '3500');
+            svgClone.setAttribute('height', '2200');
+            svgClone.setAttribute('style', 'background-color: white;');
+            
+            // Create SVG data with proper namespace
+            let svgData = new XMLSerializer().serializeToString(svgClone);
+            
+            // Fix namespace if needed
+            if (!svgData.includes('xmlns')) {
+                svgData = svgData.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            
+            // Create data URL with charset
+            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(svgBlob);
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            // Set high resolution for better quality
+            const scale = 2;
+            canvas.width = 3500 * scale;
+            canvas.height = 2200 * scale;
+            
+            // Fill white background first
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            img.onload = function() {
+                try {
+                    // Draw the image on canvas
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Convert to blob with high quality
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const downloadUrl = URL.createObjectURL(blob);
+                            const downloadLink = document.createElement('a');
+                            downloadLink.download = 'ChildSecurity_UseCase_Diagram.png';
+                            downloadLink.href = downloadUrl;
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                            
+                            // Clean up
+                            setTimeout(() => {
+                                URL.revokeObjectURL(downloadUrl);
+                                URL.revokeObjectURL(url);
+                            }, 100);
+                            
+                            // Show success message
+                            const btn = document.querySelector('.download-btn');
+                            const originalText = btn.textContent;
+                            btn.textContent = '✓ Downloaded!';
+                            btn.style.background = '#28a745';
+                            setTimeout(() => {
+                                btn.textContent = originalText;
+                                btn.style.background = '#4CAF50';
+                            }, 2000);
+                        } else {
+                            alert('Error: Could not generate PNG. Please try again.');
+                        }
+                    }, 'image/png', 1.0); // Maximum quality
+                } catch (e) {
+                    console.error('Error rendering:', e);
+                    alert('Error rendering image. Please try using browser screenshot instead.');
+                }
+            };
+            
+            img.onerror = function(e) {
+                console.error('Image load error:', e);
+                alert('Error loading SVG. Please try:\n1. Right-click on diagram → Save Image As\n2. Or use browser screenshot tools');
+                URL.revokeObjectURL(url);
+            };
+            
+            // Set crossOrigin to avoid CORS issues
+            img.crossOrigin = 'anonymous';
+            img.src = url;
+        }
+        
+        // Alternative method using base64 data URL (often more reliable)
+        function downloadPNGAlternative() {
+            const svg = document.querySelector('svg');
+            const svgRect = svg.getBoundingClientRect();
+            
+            // Create a copy of SVG with proper attributes
+            const svgClone = svg.cloneNode(true);
+            svgClone.setAttribute('version', '1.1');
+            svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+            svgClone.setAttribute('width', '3500');
+            svgClone.setAttribute('height', '2200');
+            
+            // Serialize to string
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svgClone);
+            
+            // Fix any potential issues with fill colors
+            svgString = svgString.replace(/fill="currentColor"/g, 'fill="#000"');
+            
+            // Create base64 data URL
+            const base64 = btoa(unescape(encodeURIComponent(svgString)));
+            const svgDataUrl = 'data:image/svg+xml;base64,' + base64;
+            
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const scale = 2; // 2x for high DPI
+                canvas.width = 3500 * scale;
+                canvas.height = 2200 * scale;
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Set white background
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Wait a bit for image to fully load
+                setTimeout(() => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'ChildSecurity_UseCase_Diagram.png';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            
+                            // Show success
+                            const btns = document.querySelectorAll('.download-btn');
+                            const altBtn = Array.from(btns).find(b => b.textContent.includes('Alt'));
+                            if (altBtn) {
+                                const originalText = altBtn.textContent;
+                                altBtn.textContent = '✓ Downloaded!';
+                                altBtn.style.background = '#28a745';
+                                setTimeout(() => {
+                                    altBtn.textContent = originalText;
+                                    altBtn.style.background = '#007bff';
+                                }, 2000);
+                            }
+                        }
+                    }, 'image/png', 1.0);
+                }, 100);
+            };
+            
+            img.onerror = function() {
+                alert('Alternative method failed. Please try:\n1. Right-click diagram → Save Image\n2. Use browser screenshot');
+            };
+            
+            img.src = svgDataUrl;
+        }
+        
+        // Direct SVG download (works well and can be converted)
+        function downloadSVG() {
+            const svg = document.querySelector('svg');
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(svgBlob);
+            const downloadLink = document.createElement('a');
+            downloadLink.download = 'ChildSecurity_UseCase_Diagram.svg';
+            downloadLink.href = url;
+            downloadLink.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+
