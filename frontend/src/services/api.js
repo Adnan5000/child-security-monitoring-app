@@ -1,0 +1,99 @@
+const API_BASE_URL = 'http://localhost:8000';
+
+// Get token from localStorage
+const getToken = () => {
+  return localStorage.getItem('authToken');
+};
+
+// Set token in localStorage
+const setToken = (token) => {
+  localStorage.setItem('authToken', token);
+};
+
+// Remove token from localStorage
+const removeToken = () => {
+  localStorage.removeItem('authToken');
+};
+
+// API request wrapper
+const apiRequest = async (endpoint, options = {}) => {
+  const token = getToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  if (!response.ok) {
+    let errorMessage = 'An error occurred';
+    try {
+      const errorData = await response.json();
+      // Handle FastAPI validation errors (422)
+      if (errorData.detail) {
+        if (Array.isArray(errorData.detail)) {
+          // Multiple validation errors
+          errorMessage = errorData.detail.map(err => {
+            const field = err.loc ? err.loc[err.loc.length - 1] : '';
+            const msg = err.msg || '';
+            return field ? `${field}: ${msg}` : msg;
+          }).join(', ');
+        } else {
+          // Single error message
+          errorMessage = errorData.detail;
+        }
+      }
+    } catch (e) {
+      // If JSON parsing fails, use status text
+      errorMessage = response.statusText || 'Request failed';
+    }
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+};
+
+// Authentication API
+export const authAPI = {
+  register: async (userData) => {
+    return apiRequest('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  },
+
+  login: async (email, password) => {
+    const response = await apiRequest('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+    
+    if (response.access_token) {
+      setToken(response.access_token);
+    }
+    
+    return response;
+  },
+
+  logout: () => {
+    removeToken();
+  },
+
+  getCurrentUser: async () => {
+    return apiRequest('/api/auth/me');
+  },
+
+  isAuthenticated: () => {
+    return !!getToken();
+  },
+};
+
+export default apiRequest;
+

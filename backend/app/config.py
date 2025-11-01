@@ -4,7 +4,9 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "postgresql://user:password@localhost:5432/child_security_db"
+    # Default: uses current system user with no password (typical Homebrew PostgreSQL setup)
+    # Override via .env file or environment variable
+    DATABASE_URL: str = "postgresql://localhost/child_security_db"
     
     # Redis
     REDIS_HOST: str = "localhost"

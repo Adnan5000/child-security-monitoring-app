@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.redis_client import RedisClient
+from app.auth.routes import router as auth_router
 
 app = FastAPI(
     title="Child Security Monitoring API",
@@ -17,6 +18,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(auth_router)
 
 
 @app.on_event("startup")
