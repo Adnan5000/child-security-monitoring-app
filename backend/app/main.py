@@ -10,10 +10,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configure CORS to allow React frontend
+# Configure CORS to allow React frontend and React Native mobile app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["*"],  # Allow all origins for development (restrict in production)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
