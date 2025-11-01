@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
+from app.redis_client import RedisClient
 
 app = FastAPI(
     title="Child Security Monitoring API",
@@ -16,18 +18,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize connections on startup"""
+    # Test Redis connection
+    if RedisClient.ping():
+        print("✓ Redis connection established")
+    else:
+        print("⚠ Redis connection failed - continuing without Redis cache")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on shutdown"""
+    pass
+
+
 @app.get("/")
 async def root():
     return {
         "message": "Child Security Monitoring API",
         "status": "running",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "database": "PostgreSQL",
+        "cache": "Redis"
     }
+
 
 @app.get("/api/health")
 async def health_check():
+    """Health check endpoint"""
+    redis_status = RedisClient.ping()
+    
     return {
         "status": "healthy",
-        "service": "Child Security Monitoring API"
+        "service": "Child Security Monitoring API",
+        "database": "PostgreSQL",
+        "redis": "connected" if redis_status else "disconnected"
     }
-

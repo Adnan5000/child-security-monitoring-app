@@ -18,6 +18,8 @@ child-security-monitoring-app/
 - Node.js (v16 or higher)
 - Python (v3.8 or higher)
 - npm or yarn
+- PostgreSQL (v12 or higher)
+- Redis (v6 or higher)
 
 ### Frontend Setup
 
@@ -56,7 +58,42 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Start the backend server:
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your database credentials
+```
+
+5. Set up PostgreSQL database:
+```bash
+# Create database
+createdb child_security_db
+
+# Or using psql:
+psql -U postgres
+CREATE DATABASE child_security_db;
+\q
+```
+
+6. Run database migrations:
+```bash
+# Create initial migration
+alembic revision --autogenerate -m "Initial migration"
+
+# Apply migrations
+alembic upgrade head
+```
+
+7. Start Redis (if not running as a service):
+```bash
+# macOS (using Homebrew)
+brew services start redis
+
+# Or run directly
+redis-server
+```
+
+8. Start the backend server:
 ```bash
 python run.py
 ```
@@ -101,7 +138,33 @@ python run.py
 
 - **Frontend**: React 19, Vite
 - **Backend**: FastAPI, Python 3.8+
+- **Database**: PostgreSQL (with SQLAlchemy ORM)
+- **Cache**: Redis (for real-time location caching)
+- **Migrations**: Alembic
 - **Target Platform**: Android (initially)
+
+## Database Architecture
+
+The application uses a **PostgreSQL + Redis** architecture:
+
+- **PostgreSQL**: Primary database for all persistent data (users, children, locations, alerts, etc.)
+- **Redis**: Real-time caching layer for:
+  - Current location data (TTL: 5 minutes)
+  - Device status (TTL: 1 minute)
+  - Fast lookups and real-time updates
+
+### Database Models
+
+The database schema is based on the UML class diagram and includes:
+- Users & Parents
+- Children profiles
+- Location tracking (with history)
+- Emergency contacts
+- Alerts & Alert distributions
+- Device status
+- Shake detector configuration
+
+See `backend/app/models/` for all model definitions.
 
 ## License
 
