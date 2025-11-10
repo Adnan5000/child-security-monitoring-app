@@ -1,0 +1,137 @@
+# Child Security Mobile App
+
+React Native mobile application for Android (and iOS in the future).
+
+## Prerequisites
+
+1. **Node.js** (v20 or higher) - Already installed ✅
+2. **Android Studio** - For Android development
+   - Download from: https://developer.android.com/studio
+   - Install Android SDK and create an Android Virtual Device (AVD)
+
+3. **Java Development Kit (JDK)** - Usually comes with Android Studio
+
+## Setup Instructions
+
+### 1. Install Dependencies
+
+```bash
+cd mobile
+npm install
+```
+
+### 2. Configure API Endpoint
+
+The app is configured to connect to your backend server. Update `src/services/api.js`:
+
+**For Android Emulator:**
+- Keep: `http://10.0.2.2:8000` (this is localhost on emulator)
+
+**For Physical Android Device:**
+- Change to: `http://192.168.0.29:8000` (your MacBook's IP address)
+- Make sure both devices are on the same WiFi network
+
+### 3. Start Metro Bundler
+
+```bash
+npm start
+```
+
+Or:
+```bash
+npx react-native start
+```
+
+### 4. Run on Android
+
+**Option A: Android Emulator**
+```bash
+# Make sure Android emulator is running
+npm run android
+```
+
+**Option B: Physical Device**
+1. Enable USB debugging on your Android device
+2. Connect device via USB
+3. Run: `npm run android`
+
+## Network Configuration
+
+### Testing on Physical Device
+
+1. **Find your MacBook's IP:**
+   ```bash
+   ifconfig | grep "inet " | grep -v 127.0.0.1
+   ```
+
+2. **Update API URL in `src/services/api.js`:**
+   - Change `API_BASE_URL` to `http://YOUR_MAC_IP:8000`
+
+3. **Make sure backend allows network access:**
+   - Backend is already configured to accept connections from network (0.0.0.0:8000)
+   - Ensure firewall allows connections on port 8000
+
+4. **Connect both devices to same WiFi network**
+
+5. **Update Android manifest for cleartext traffic (development only):**
+   - Already configured in `android/app/src/main/AndroidManifest.xml`
+
+## Project Structure
+
+```
+mobile/
+├── src/
+│   ├── screens/          # Screen components
+│   │   ├── LoginScreen.js
+│   │   ├── SignUpScreen.js
+│   │   └── DashboardScreen.js
+│   ├── services/         # API services
+│   │   └── api.js
+│   └── navigation/       # Navigation setup
+│       └── AppNavigator.js
+├── android/              # Android native code
+└── ios/                  # iOS native code (for future)
+```
+
+## Features Implemented
+
+✅ User Authentication (Login/SignUp)
+✅ Protected Routes
+✅ Dashboard with user information
+✅ API integration with backend
+✅ AsyncStorage for token persistence
+
+## Next Steps
+
+1. **Add Location Tracking**
+   - Install: `npm install react-native-geolocation-service`
+   - Add permissions to AndroidManifest.xml
+
+2. **Add Shake Detection**
+   - Install: `npm install react-native-sensors`
+
+3. **Add Push Notifications**
+   - Install: `npm install react-native-push-notification`
+
+## Troubleshooting
+
+### "Unable to connect to Metro"
+- Make sure Metro bundler is running: `npm start`
+- Reset Metro: `npm start -- --reset-cache`
+
+### "Network request failed"
+- Check API_BASE_URL in `src/services/api.js`
+- Verify backend is running
+- Ensure devices are on same network
+- For physical device, use MacBook's IP, not localhost
+
+### Build Errors
+- Clean build: `cd android && ./gradlew clean && cd ..`
+- Reinstall dependencies: `rm -rf node_modules && npm install`
+
+## Development Notes
+
+- The app uses React Navigation for routing
+- AsyncStorage is used instead of localStorage (web)
+- API service handles authentication tokens automatically
+- Network configuration needed for physical device testing
