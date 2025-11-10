@@ -3,6 +3,9 @@ import { authAPI } from './services/api'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
+import ChildrenList from './pages/ChildrenList'
+import AddChild from './pages/AddChild'
+import EditChild from './pages/EditChild'
 import './App.css'
 
 // Protected Route Component
@@ -42,6 +45,30 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/children" 
+          element={
+            <ProtectedRoute>
+              <ChildrenList />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/add-child" 
+          element={
+            <ProtectedRoute>
+              <AddChild />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/edit-child/:childId" 
+          element={
+            <ProtectedRoute>
+              <EditChild />
             </ProtectedRoute>
           } 
         />

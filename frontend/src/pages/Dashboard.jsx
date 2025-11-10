@@ -87,9 +87,13 @@ function Dashboard() {
         <div className="dashboard-card">
           <h2>Quick Actions</h2>
           <div className="actions-grid">
-            <div className="action-item">
+            <div className="action-item" onClick={() => navigate('/children')}>
               <span className="action-icon">👨‍👩‍👧‍👦</span>
-              <span>Add Child Profile</span>
+              <span>My Children</span>
+            </div>
+            <div className="action-item" onClick={() => navigate('/add-child')}>
+              <span className="action-icon">➕</span>
+              <span>Add Child</span>
             </div>
             <div className="action-item">
               <span className="action-icon">📞</span>
@@ -99,16 +103,7 @@ function Dashboard() {
               <span className="action-icon">📍</span>
               <span>View Locations</span>
             </div>
-            <div className="action-item">
-              <span className="action-icon">⚙️</span>
-              <span>Settings</span>
-            </div>
           </div>
-        </div>
-
-        <div className="dashboard-card">
-          <h2>Coming Soon</h2>
-          <p>Features like child profiles, location tracking, and alerts will be available here.</p>
         </div>
       </main>
     </div>

@@ -95,5 +95,41 @@ export const authAPI = {
   },
 };
 
+// Children API
+export const childrenAPI = {
+  // Get all children for the current parent
+  getAll: async () => {
+    return apiRequest('/api/children');
+  },
+
+  // Get a specific child by ID
+  getById: async (childId) => {
+    return apiRequest(`/api/children/${childId}`);
+  },
+
+  // Create a new child
+  create: async (childData) => {
+    return apiRequest('/api/children', {
+      method: 'POST',
+      body: JSON.stringify(childData),
+    });
+  },
+
+  // Update a child
+  update: async (childId, childData) => {
+    return apiRequest(`/api/children/${childId}`, {
+      method: 'PUT',
+      body: JSON.stringify(childData),
+    });
+  },
+
+  // Delete a child
+  delete: async (childId) => {
+    return apiRequest(`/api/children/${childId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
 export default apiRequest;
 
