@@ -4,6 +4,7 @@ from app.config import settings
 from app.redis_client import RedisClient
 from app.auth.routes import router as auth_router
 from app.children.routes import router as children_router
+from app.locations.routes import router as locations_router
 
 app = FastAPI(
     title="Child Security Monitoring API",
@@ -23,6 +24,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(children_router)
+app.include_router(locations_router)
 
 
 @app.on_event("startup")

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../services/api'
+import LocationMap from '../components/LocationMap'
 import './Dashboard.css'
 
 function Dashboard() {
@@ -104,6 +105,10 @@ function Dashboard() {
               <span>View Locations</span>
             </div>
           </div>
+        </div>
+
+        <div className="dashboard-card">
+          <LocationMap />
         </div>
       </main>
     </div>
