@@ -8,6 +8,7 @@ import DashboardScreen from '../screens/DashboardScreen';
 import ChildrenListScreen from '../screens/ChildrenListScreen';
 import AddChildScreen from '../screens/AddChildScreen';
 import EditChildScreen from '../screens/EditChildScreen';
+import LocationTrackingScreen from '../screens/LocationTrackingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,7 @@ function AppNavigator() {
             <Stack.Screen name="ChildrenList" component={ChildrenListScreen} />
             <Stack.Screen name="AddChild" component={AddChildScreen} />
             <Stack.Screen name="EditChild" component={EditChildScreen} />
+            <Stack.Screen name="LocationTracking" component={LocationTrackingScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
           </>

@@ -127,13 +127,16 @@ function DashboardScreen({ navigation }) {
               <Text style={styles.actionIcon}>➕</Text>
               <Text style={styles.actionText}>Add Child</Text>
             </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionItem}
+              onPress={() => navigation.navigate('LocationTracking')}
+            >
+              <Text style={styles.actionIcon}>📍</Text>
+              <Text style={styles.actionText}>Location Tracking</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.actionItem}>
               <Text style={styles.actionIcon}>📞</Text>
               <Text style={styles.actionText}>Emergency Contacts</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionItem}>
-              <Text style={styles.actionIcon}>📍</Text>
-              <Text style={styles.actionText}>View Locations</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -157,6 +157,40 @@ export const childrenAPI = {
   },
 };
 
+// Locations API
+export const locationsAPI = {
+  // Get all children's current locations
+  getChildrenLocations: async () => {
+    return apiRequest('/api/locations/children');
+  },
+
+  // Get a specific child's current location
+  getChildLocation: async (childId) => {
+    return apiRequest(`/api/locations/child/${childId}`);
+  },
+
+  // Get location history for a child
+  getChildLocationHistory: async (childId, hours = 24) => {
+    return apiRequest(`/api/locations/child/${childId}/history?hours=${hours}`);
+  },
+
+  // Create/update location (from mobile device)
+  updateLocation: async (childId, locationData) => {
+    return apiRequest(`/api/locations/child/${childId}`, {
+      method: 'PUT',
+      body: JSON.stringify(locationData),
+    });
+  },
+
+  // Create new location
+  createLocation: async (locationData) => {
+    return apiRequest('/api/locations', {
+      method: 'POST',
+      body: JSON.stringify(locationData),
+    });
+  },
+};
+
 // Helper to set API base URL (for physical device testing)
 export const setApiBaseUrl = (url) => {
   // This would require a more sophisticated setup
