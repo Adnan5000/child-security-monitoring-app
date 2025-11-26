@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authAPI } from '../services/api'
+import { authAPI, deviceStatusAPI } from '../services/api'
 import LocationMap from '../components/LocationMap'
 import './Dashboard.css'
 
 function Dashboard() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [deviceStatuses, setDeviceStatuses] = useState([])
+  const [statusError, setStatusError] = useState('')
+  const [statusLoading, setStatusLoading] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,6 +33,24 @@ function Dashboard() {
 
     fetchUser()
   }, [navigate])
+
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      try {
+        const response = await deviceStatusAPI.listStatuses()
+        setDeviceStatuses(response.devices || [])
+        setStatusError('')
+      } catch (err) {
+        setStatusError(err.message || 'Unable to load device statuses')
+      } finally {
+        setStatusLoading(false)
+      }
+    }
+
+    fetchStatuses()
+    const interval = setInterval(fetchStatuses, 20000)
+    return () => clearInterval(interval)
+  }, [])
 
   const handleLogout = () => {
     authAPI.logout()
@@ -96,11 +117,15 @@ function Dashboard() {
               <span className="action-icon">➕</span>
               <span>Add Child</span>
             </div>
-            <div className="action-item">
+            <div className="action-item" onClick={() => navigate('/emergency-contacts')}>
               <span className="action-icon">📞</span>
               <span>Emergency Contacts</span>
             </div>
-            <div className="action-item">
+            <div className="action-item" onClick={() => navigate('/alerts')}>
+              <span className="action-icon">🚨</span>
+              <span>Alerts</span>
+            </div>
+            <div className="action-item" onClick={() => navigate('/dashboard#map')}>
               <span className="action-icon">📍</span>
               <span>View Locations</span>
             </div>
@@ -108,7 +133,43 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-card">
-          <LocationMap />
+          <h2>Device Health</h2>
+          {statusLoading ? (
+            <div className="status-placeholder">Loading device statuses...</div>
+          ) : statusError ? (
+            <div className="status-error">{statusError}</div>
+          ) : deviceStatuses.length === 0 ? (
+            <div className="status-placeholder">No device telemetry yet.</div>
+          ) : (
+            <div className="device-status-list">
+              {deviceStatuses.map((status) => (
+                <div key={status.child_id} className="device-status-item">
+                  <div className="device-status-row">
+                    <strong>{status.child_id.slice(0, 8)}...</strong>
+                    <span className="status-dot" data-state={status.app_status === 'Active' ? 'online' : 'idle'} />
+                  </div>
+                  <div className="device-status-row">
+                    <span>Battery</span>
+                    <span>{typeof status.battery_level === 'number' ? `${status.battery_level}%` : '—'}</span>
+                  </div>
+                  <div className="device-status-row">
+                    <span>Network</span>
+                    <span>{status.network_status || 'Unknown'}</span>
+                  </div>
+                  <div className="device-status-row">
+                    <span>Updated</span>
+                    <span>{new Date(status.last_update).toLocaleTimeString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="dashboard-card">
+          <div id="map">
+            <LocationMap />
+          </div>
         </div>
       </main>
     </div>

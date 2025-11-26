@@ -191,6 +191,41 @@ export const locationsAPI = {
   },
 };
 
+// Emergency Contacts API
+export const emergencyContactsAPI = {
+  getAll: async () => apiRequest('/api/emergency-contacts'),
+};
+
+// Alerts API
+export const alertsAPI = {
+  getAlerts: async (status) => {
+    const query = status ? `?status_filter=${status}` : '';
+    return apiRequest(`/api/alerts${query}`);
+  },
+  createAlert: async (alertData) => {
+    return apiRequest('/api/alerts', {
+      method: 'POST',
+      body: JSON.stringify(alertData),
+    });
+  },
+  acknowledgeAlert: async (alertId) => {
+    return apiRequest(`/api/alerts/${alertId}/acknowledge`, {
+      method: 'POST',
+    });
+  },
+};
+
+// Device Status API
+export const deviceStatusAPI = {
+  updateStatus: async (childId, statusData) => {
+    return apiRequest(`/api/devices/child/${childId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify(statusData),
+    });
+  },
+  listStatuses: async () => apiRequest('/api/devices/status'),
+};
+
 // Helper to set API base URL (for physical device testing)
 export const setApiBaseUrl = (url) => {
   // This would require a more sophisticated setup

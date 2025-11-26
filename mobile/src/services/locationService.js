@@ -1,6 +1,6 @@
 import Geolocation from 'react-native-geolocation-service';
 import { Platform, PermissionsAndroid, Alert } from 'react-native';
-import { locationsAPI } from './api';
+import { locationsAPI, deviceStatusAPI } from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LocationService {
@@ -10,6 +10,7 @@ class LocationService {
     this.updateInterval = null;
     this.childId = null;
     this.updateIntervalMs = 30000; // 30 seconds default
+    this.lastChildId = null;
   }
 
   // Request location permissions
@@ -128,8 +129,9 @@ class LocationService {
     }
 
     // Set child ID
-    if (childId) {
-      await this.setChildId(childId);
+    let resolvedChildId = childId;
+    if (resolvedChildId) {
+      await this.setChildId(resolvedChildId);
     } else {
       const storedChildId = await this.getChildId();
       if (!storedChildId) {
@@ -139,15 +141,22 @@ class LocationService {
         );
         return;
       }
+      resolvedChildId = storedChildId;
     }
 
     this.isTracking = true;
+    this.lastChildId = resolvedChildId;
     this.updateIntervalMs = intervalMs;
 
     // Send initial location
     try {
       const location = await this.getCurrentLocation();
       await this.sendLocationUpdate(location);
+      await this.sendDeviceStatus({
+        childId: resolvedChildId,
+        app_status: 'Active',
+        network_status: 'Online',
+      });
     } catch (error) {
       console.error('Error getting initial location:', error);
     }
@@ -157,6 +166,11 @@ class LocationService {
       try {
         const location = await this.getCurrentLocation();
         await this.sendLocationUpdate(location);
+        await this.sendDeviceStatus({
+          childId: resolvedChildId,
+          app_status: 'Active',
+          network_status: 'Online',
+        });
       } catch (error) {
         console.error('Error in periodic location update:', error);
       }
@@ -183,12 +197,38 @@ class LocationService {
       this.watchId = null;
     }
 
+    if (this.lastChildId) {
+      this.sendDeviceStatus({
+        childId: this.lastChildId,
+        app_status: 'Idle',
+        network_status: 'Offline',
+      });
+    }
+
     console.log('Location tracking stopped');
   }
 
   // Check if tracking is active
   isActive() {
     return this.isTracking;
+  }
+
+  async sendDeviceStatus({ childId, app_status, network_status }) {
+    try {
+      const targetChildId = childId || this.lastChildId || (await this.getChildId());
+      if (!targetChildId) {
+        return;
+      }
+
+      await deviceStatusAPI.updateStatus(targetChildId, {
+        device_id: this.childId || targetChildId,
+        battery_level: null,
+        network_status,
+        app_status,
+      });
+    } catch (error) {
+      console.error('Error sending device status:', error);
+    }
   }
 }
 

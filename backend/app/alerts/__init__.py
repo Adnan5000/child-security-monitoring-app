@@ -1,0 +1,3 @@
+"""Alerts router package."""
+
+

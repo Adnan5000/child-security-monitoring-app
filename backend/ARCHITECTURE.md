@@ -104,27 +104,44 @@ backend/
 ### Health Check
 - `GET /api/health` - System status (checks PostgreSQL & Redis)
 
+### Authentication & Parents
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+
+### Children & Location Tracking
+- `CRUD /api/children`
+- `POST /api/locations` - Insert new sample + cache
+- `GET /api/locations/children` - Batch snapshot
+- `GET /api/locations/child/{child_id}`
+- `GET /api/locations/child/{child_id}/history`
+
+### Emergency Contacts
+- `GET|POST /api/emergency-contacts`
+- `PUT|DELETE /api/emergency-contacts/{contact_id}`
+
+### Alerts & SOS
+- `POST /api/alerts` - Trigger SHAKE/SOS alerts (auto-distributes to contacts)
+- `GET /api/alerts?status_filter=` - Filter by status
+- `POST /api/alerts/{alert_id}/acknowledge`
+
+### Device Telemetry
+- `GET /api/devices/status` - All devices for parent
+- `GET|PUT /api/devices/child/{child_id}/status`
+
 ## Next Steps
 
-1. **Authentication**
-   - JWT token generation
-   - User registration/login
-   - Password hashing (bcrypt)
+1. **Notifications**
+   - SMS/e-mail fan-out via providers
+   - Push notifications for mobile/web
 
-2. **Location Tracking**
-   - POST endpoint for location updates
-   - GET endpoint for current location
-   - GET endpoint for location history
+2. **Geofencing**
+   - Safe zone definitions
+   - Auto alerts on boundary breaches
 
-3. **Alert System**
-   - POST endpoint to trigger alerts
-   - Notification distribution
-   - Alert status tracking
-
-4. **Dashboard API**
-   - GET children list
-   - GET dashboard stats
-   - GET recent alerts
+3. **Advanced Analytics**
+   - Weekly movement digests
+   - Device health trends
 
 ## Performance Considerations
 

@@ -165,5 +165,61 @@ export const locationsAPI = {
   },
 };
 
+export const emergencyContactsAPI = {
+  getAll: async () => {
+    return apiRequest('/api/emergency-contacts');
+  },
+
+  create: async (contactData) => {
+    return apiRequest('/api/emergency-contacts', {
+      method: 'POST',
+      body: JSON.stringify(contactData),
+    });
+  },
+
+  update: async (contactId, contactData) => {
+    return apiRequest(`/api/emergency-contacts/${contactId}`, {
+      method: 'PUT',
+      body: JSON.stringify(contactData),
+    });
+  },
+
+  delete: async (contactId) => {
+    return apiRequest(`/api/emergency-contacts/${contactId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+export const alertsAPI = {
+  getAlerts: async (status) => {
+    const query = status ? `?status_filter=${status}` : '';
+    return apiRequest(`/api/alerts${query}`);
+  },
+
+  createAlert: async (alertData) => {
+    return apiRequest('/api/alerts', {
+      method: 'POST',
+      body: JSON.stringify(alertData),
+    });
+  },
+
+  acknowledgeAlert: async (alertId) => {
+    return apiRequest(`/api/alerts/${alertId}/acknowledge`, {
+      method: 'POST',
+    });
+  },
+};
+
+export const deviceStatusAPI = {
+  listStatuses: async () => {
+    return apiRequest('/api/devices/status');
+  },
+
+  getStatusByChild: async (childId) => {
+    return apiRequest(`/api/devices/child/${childId}/status`);
+  },
+};
+
 export default apiRequest;
 

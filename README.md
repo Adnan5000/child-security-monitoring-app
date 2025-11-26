@@ -125,14 +125,14 @@ cd backend
 python run.py
 ```
 
-## Features (Planned)
+## Features
 
-- 📍 Real-time location tracking
-- 🚨 Emergency alerts and SOS functionality
-- 📱 Device status monitoring
-- 👨‍👩‍👧‍👦 Parent dashboard
-- 📞 Emergency contact management
-- 🔔 Push notifications
+- 📍 Real-time location tracking with Redis-backed cache and live dashboard map
+- 🚨 Emergency alerts & SOS workflow with parent acknowledgements
+- 📞 Emergency contact management with priority fan-out lists
+- 📱 Device status monitoring (battery/network/app heartbeat)
+- 👨‍👩‍👧‍👦 Parent dashboard & mobile companion app
+- 🔔 Push notifications *(planned)*
 
 ## Technology Stack
 
@@ -141,7 +141,7 @@ python run.py
 - **Database**: PostgreSQL (with SQLAlchemy ORM)
 - **Cache**: Redis (for real-time location caching)
 - **Migrations**: Alembic
-- **Target Platform**: Android (initially)
+- **Target Platform**: Android (React Native). Any `mobile/ios` assets are auto-generated scaffolding and are not maintained.
 
 ## Database Architecture
 

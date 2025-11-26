@@ -8,7 +8,7 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { childrenAPI } from '../services/api';
+import { childrenAPI, alertsAPI } from '../services/api';
 import locationService from '../services/locationService';
 
 function LocationTrackingScreen({ navigation }) {
@@ -18,6 +18,7 @@ function LocationTrackingScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
+  const [sendingSOS, setSendingSOS] = useState(false);
 
   useEffect(() => {
     loadChildren();
@@ -87,6 +88,40 @@ function LocationTrackingScreen({ navigation }) {
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to get location. Please check permissions.');
+    }
+  };
+
+  const handleSendSOS = async () => {
+    if (!selectedChildId) {
+      Alert.alert('Error', 'Please select a child first');
+      return;
+    }
+
+    setSendingSOS(true);
+    try {
+      let locationPayload = null;
+      try {
+        const location = await locationService.getCurrentLocation();
+        locationPayload = {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          accuracy: location.accuracy,
+        };
+      } catch (error) {
+        console.warn('Unable to fetch location for SOS alert:', error);
+      }
+
+      await alertsAPI.createAlert({
+        child_id: selectedChildId,
+        alert_type: 'SOS_BUTTON',
+        message: 'SOS triggered from mobile device',
+        location: locationPayload,
+      });
+      Alert.alert('SOS Sent', 'Parents have been notified.');
+    } catch (error) {
+      Alert.alert('Error', error.message || 'Failed to send SOS alert');
+    } finally {
+      setSendingSOS(false);
     }
   };
 
@@ -218,6 +253,15 @@ function LocationTrackingScreen({ navigation }) {
                 onPress={handleTestLocation}
               >
                 <Text style={styles.buttonText}>📍 Test Location</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.sosButton]}
+                onPress={handleSendSOS}
+                disabled={sendingSOS || !selectedChildId}
+              >
+                <Text style={styles.buttonText}>
+                  {sendingSOS ? 'Sending SOS...' : '🚨 Send SOS Alert'}
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -368,6 +412,9 @@ const styles = StyleSheet.create({
   },
   testButton: {
     backgroundColor: '#667eea',
+  },
+  sosButton: {
+    backgroundColor: '#f97316',
   },
   buttonText: {
     color: '#fff',

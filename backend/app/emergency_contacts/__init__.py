@@ -1,0 +1,3 @@
+"""Emergency contacts router package."""
+
+

@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard'
 import ChildrenList from './pages/ChildrenList'
 import AddChild from './pages/AddChild'
 import EditChild from './pages/EditChild'
+import EmergencyContacts from './pages/EmergencyContacts'
+import Alerts from './pages/Alerts'
 import './App.css'
 
 // Protected Route Component
@@ -53,6 +55,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ChildrenList />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/emergency-contacts" 
+          element={
+            <ProtectedRoute>
+              <EmergencyContacts />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/alerts" 
+          element={
+            <ProtectedRoute>
+              <Alerts />
             </ProtectedRoute>
           } 
         />

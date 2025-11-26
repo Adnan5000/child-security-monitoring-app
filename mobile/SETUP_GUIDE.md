@@ -1,4 +1,6 @@
-# React Native Setup Guide
+# React Native Android Setup Guide
+
+> This project intentionally targets **Android only**. Any `ios/` artifacts created by the React Native CLI can be ignored.
 
 ## Quick Start
 
@@ -120,8 +122,8 @@ mobile/
 │   ├── screens/          # Screen components
 │   ├── services/          # API services
 │   └── navigation/        # Navigation setup
-├── android/               # Android native code
-└── ios/                   # iOS native code (for future)
+├── android/               # Android native code (primary target)
+└── ios/                   # Unused template output (safe to ignore)
 ```
 
 ## Next: Add Native Features

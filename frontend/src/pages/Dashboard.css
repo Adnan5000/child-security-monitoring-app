@@ -112,6 +112,54 @@
   transition: transform 0.2s, background 0.2s;
 }
 
+.device-status-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.device-status-item {
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  padding: 15px;
+  background: #f8f9ff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.device-status-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+
+.status-dot[data-state="online"] {
+  background: #22c55e;
+}
+
+.status-dot[data-state="idle"] {
+  background: #f97316;
+}
+
+.status-placeholder,
+.status-error {
+  padding: 10px;
+  color: #666;
+}
+
+.status-error {
+  color: #b91c1c;
+}
+
 .action-item:hover {
   transform: translateY(-2px);
   background: #e9ecef;

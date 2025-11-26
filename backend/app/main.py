@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.redis_client import RedisClient
+from app.alerts.routes import router as alerts_router
 from app.auth.routes import router as auth_router
 from app.children.routes import router as children_router
+from app.devices.routes import router as devices_router
+from app.emergency_contacts.routes import router as emergency_contacts_router
 from app.locations.routes import router as locations_router
 
 app = FastAPI(
@@ -25,6 +28,9 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(children_router)
 app.include_router(locations_router)
+app.include_router(emergency_contacts_router)
+app.include_router(alerts_router)
+app.include_router(devices_router)
 
 
 @app.on_event("startup")
