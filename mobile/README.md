@@ -101,19 +101,31 @@ mobile/
 ✅ Protected Routes
 ✅ Dashboard with user information
 ✅ Emergency contact + alerts screens
-✅ Background location tracking & SOS button
+✅ **Background location tracking** (continues when app is closed)
+✅ Automatic shake detection with configurable sensitivity
+✅ SOS button for manual emergency alerts
 ✅ Device heartbeat uploads to backend
 ✅ AsyncStorage for token persistence
 ✅ API integration with backend
+
+## Background Location Tracking
+
+The app now supports **background location tracking** that continues even when the app is closed. See [BACKGROUND_LOCATION_SETUP.md](./BACKGROUND_LOCATION_SETUP.md) for:
+- Permission setup instructions
+- Battery optimization configuration
+- Troubleshooting guide
+- Testing procedures
+
+**Important**: On Android 10+, users must grant "Allow all the time" location permission for background tracking to work.
 
 ## Next Steps (Optional)
 
 1. **Push Notifications**
    - e.g. `expo-notifications` or Firebase Cloud Messaging
-2. **Shake Detection Automation**
-   - `react-native-sensors` + background worker to trigger alerts
-3. **Battery/Network Telemetry Enhancements**
+2. **Battery/Network Telemetry Enhancements**
    - Hook into Android battery/network APIs for richer device health data
+3. **Geofencing**
+   - Define safe zones and alert when child enters/exits
 
 ## Troubleshooting
 

@@ -2,6 +2,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import { locationsAPI, deviceStatusAPI } from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import backgroundLocationService from './backgroundLocationService';
 
 class LocationService {
   constructor() {
@@ -13,29 +14,54 @@ class LocationService {
     this.lastChildId = null;
   }
 
-  // Request location permissions
+  // Request location permissions (including background)
   async requestPermissions() {
     if (Platform.OS === 'android') {
       try {
-        const granted = await PermissionsAndroid.requestMultiple([
+        // Request foreground location permissions first
+        const foregroundGranted = await PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
         ]);
 
         if (
-          granted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
-          granted[PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION] ===
+          foregroundGranted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] !==
+            PermissionsAndroid.RESULTS.GRANTED ||
+          foregroundGranted[PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION] !==
             PermissionsAndroid.RESULTS.GRANTED
         ) {
-          return true;
-        } else {
           Alert.alert(
             'Location Permission Required',
             'Please enable location permissions in app settings to track your location.'
           );
           return false;
         }
+
+        // Request background location permission (Android 10+)
+        if (Platform.Version >= 29) {
+          const backgroundGranted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
+          );
+
+          if (backgroundGranted !== PermissionsAndroid.RESULTS.GRANTED) {
+            Alert.alert(
+              'Background Location Permission',
+              'For continuous tracking when the app is closed, please enable "Allow all the time" location permission in app settings.',
+              [
+                { text: 'OK', style: 'default' },
+                {
+                  text: 'Open Settings',
+                  onPress: () => {
+                    // User can manually enable in settings
+                  },
+                },
+              ]
+            );
+            // Continue anyway, but background tracking may be limited
+          }
+        }
+
+        return true;
       } catch (err) {
         console.warn('Permission request error:', err);
         return false;
@@ -148,6 +174,14 @@ class LocationService {
     this.lastChildId = resolvedChildId;
     this.updateIntervalMs = intervalMs;
 
+    // Start background tracking service
+    try {
+      await backgroundLocationService.startBackgroundTracking(resolvedChildId, intervalMs);
+      console.log('Background location service started');
+    } catch (error) {
+      console.warn('Failed to start background service, continuing with foreground only:', error);
+    }
+
     // Send initial location
     try {
       const location = await this.getCurrentLocation();
@@ -161,7 +195,7 @@ class LocationService {
       console.error('Error getting initial location:', error);
     }
 
-    // Set up periodic location updates
+    // Set up periodic location updates (foreground)
     this.updateInterval = setInterval(async () => {
       try {
         const location = await this.getCurrentLocation();
@@ -180,12 +214,19 @@ class LocationService {
   }
 
   // Stop location tracking
-  stopTracking() {
+  async stopTracking() {
     if (!this.isTracking) {
       return;
     }
 
     this.isTracking = false;
+
+    // Stop background tracking
+    try {
+      await backgroundLocationService.stopBackgroundTracking();
+    } catch (error) {
+      console.error('Error stopping background service:', error);
+    }
 
     if (this.updateInterval) {
       clearInterval(this.updateInterval);

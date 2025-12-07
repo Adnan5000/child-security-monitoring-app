@@ -82,8 +82,8 @@ function LocationTrackingScreen({ navigation }) {
     }
   };
 
-  const handleStopTracking = () => {
-    locationService.stopTracking();
+  const handleStopTracking = async () => {
+    await locationService.stopTracking();
     shakeDetectionService.stopMonitoring();
     setIsTracking(false);
     setIsShakeMonitoring(false);
