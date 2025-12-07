@@ -43,6 +43,18 @@ async def startup_event():
         print("✓ Redis connection established")
     else:
         print("⚠ Redis connection failed - continuing without Redis cache")
+    
+    # Check notification services
+    from app.notifications.service import notification_service
+    if notification_service.sms_enabled:
+        print("✓ SMS notifications enabled (Twilio)")
+    else:
+        print("⚠ SMS notifications disabled (configure TWILIO_* in .env)")
+    
+    if notification_service.email_enabled:
+        print("✓ Email notifications enabled (SendGrid)")
+    else:
+        print("⚠ Email notifications disabled (configure SENDGRID_* in .env)")
 
 
 @app.on_event("shutdown")

@@ -1,6 +1,7 @@
 from datetime import datetime
+import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from app.alerts.schemas import (
@@ -17,6 +18,9 @@ from app.models.alert import Alert, AlertDistribution, AlertStatus, AlertType
 from app.models.child import Child
 from app.models.location import Location
 from app.models.user import Parent, User
+from app.notifications.service import notification_service
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/alerts", tags=["alerts"])
 
@@ -68,9 +72,56 @@ def map_alert_to_response(alert: Alert) -> AlertResponse:
     )
 
 
+async def send_alert_notifications_task(alert_id: str):
+    """Background task to send notifications for an alert"""
+    from app.database import SessionLocal
+    db = SessionLocal()
+    try:
+        # Get fresh alert from database
+        alert = db.query(Alert).filter(Alert.alert_id == alert_id).first()
+        if not alert:
+            logger.error(f"Alert {alert_id} not found for notification")
+            return
+        
+        # Get distribution and contacts
+        distribution = alert.alert_distribution
+        if not distribution or not distribution.emergency_contacts:
+            logger.warning(f"No emergency contacts for alert {alert_id}")
+            return
+        
+        # Get location info
+        location_info = notification_service.get_location_string(alert)
+        
+        # Send notifications
+        results = notification_service.send_alert_notifications(
+            alert=alert,
+            contacts=distribution.emergency_contacts,
+            location_info=location_info
+        )
+        
+        # Update alert status to SENT if at least one notification was successful
+        any_success = any(
+            r.get('sms_sent') or r.get('email_sent')
+            for r in results.values()
+        )
+        
+        if any_success:
+            alert.status = AlertStatus.SENT
+            db.commit()
+            logger.info(f"Alert {alert_id} status updated to SENT")
+        else:
+            logger.warning(f"Alert {alert_id} notifications failed for all contacts")
+    
+    except Exception as e:
+        logger.error(f"Error sending notifications for alert {alert_id}: {e}", exc_info=True)
+    finally:
+        db.close()
+
+
 @router.post("", response_model=AlertResponse, status_code=status.HTTP_201_CREATED)
 async def create_alert(
     alert_data: AlertCreate,
+    background_tasks: BackgroundTasks,
     current_parent: Parent = Depends(get_current_parent),
     db: Session = Depends(get_db)
 ):
@@ -132,6 +183,14 @@ async def create_alert(
 
     db.commit()
     db.refresh(new_alert)
+    
+    # Send notifications in background
+    if parent_contacts:
+        background_tasks.add_task(
+            send_alert_notifications_task,
+            str(new_alert.alert_id)
+        )
+        logger.info(f"Scheduled notification task for alert {new_alert.alert_id}")
 
     return map_alert_to_response(new_alert)
 

@@ -62,6 +62,7 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # Edit .env with your database credentials
+# Optionally configure SMS/Email notifications (see NOTIFICATIONS_SETUP.md)
 ```
 
 5. Set up PostgreSQL database:
@@ -132,7 +133,8 @@ python run.py
 - 📞 Emergency contact management with priority fan-out lists
 - 📱 Device status monitoring (battery/network/app heartbeat)
 - 👨‍👩‍👧‍👦 Parent dashboard & mobile companion app
-- 🔔 Push notifications *(planned)*
+- 🔔 SMS & Email notifications via Twilio & SendGrid
+- 📱 Automatic shake detection with configurable sensitivity
 
 ## Technology Stack
 

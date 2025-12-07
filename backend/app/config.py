@@ -22,6 +22,19 @@ class Settings(BaseSettings):
     # Environment
     ENVIRONMENT: str = "development"
     
+    # SMS Notifications (Twilio)
+    TWILIO_ACCOUNT_SID: Optional[str] = None
+    TWILIO_AUTH_TOKEN: Optional[str] = None
+    TWILIO_PHONE_NUMBER: Optional[str] = None
+    
+    # Email Notifications (SendGrid)
+    SENDGRID_API_KEY: Optional[str] = None
+    SENDGRID_FROM_EMAIL: Optional[str] = "alerts@childsecurity.app"
+    
+    # Notification Settings
+    ENABLE_SMS_NOTIFICATIONS: bool = False
+    ENABLE_EMAIL_NOTIFICATIONS: bool = False
+    
     class Config:
         env_file = ".env"
         case_sensitive = True
