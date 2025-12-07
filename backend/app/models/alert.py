@@ -10,6 +10,8 @@ from app.database import Base
 class AlertType(str, enum.Enum):
     SHAKE_TRIGGER = "SHAKE_TRIGGER"
     SOS_BUTTON = "SOS_BUTTON"
+    GEOFENCE_ENTRY = "GEOFENCE_ENTRY"
+    GEOFENCE_EXIT = "GEOFENCE_EXIT"
 
 
 class AlertStatus(str, enum.Enum):

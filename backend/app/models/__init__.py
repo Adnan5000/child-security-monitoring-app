@@ -5,6 +5,7 @@ from app.models.emergency_contact import EmergencyContact
 from app.models.alert import Alert, AlertDistribution
 from app.models.device import DeviceStatus
 from app.models.shake_detector import ShakeDetector
+from app.models.geofence import Geofence, GeofenceEvent
 
 __all__ = [
     "User",
@@ -17,5 +18,7 @@ __all__ = [
     "AlertDistribution",
     "DeviceStatus",
     "ShakeDetector",
+    "Geofence",
+    "GeofenceEvent",
 ]
 

@@ -24,4 +24,5 @@ class Child(Base):
     alerts = relationship("Alert", back_populates="child", cascade="all, delete-orphan", order_by="desc(Alert.timestamp)")
     device_status = relationship("DeviceStatus", back_populates="child", uselist=False, cascade="all, delete-orphan")
     shake_detector = relationship("ShakeDetector", back_populates="child", uselist=False, cascade="all, delete-orphan")
+    geofences = relationship("Geofence", back_populates="child", cascade="all, delete-orphan", order_by="Geofence.name")
 

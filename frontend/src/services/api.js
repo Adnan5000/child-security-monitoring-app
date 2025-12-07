@@ -242,5 +242,31 @@ export const shakeDetectorAPI = {
   },
 };
 
+export const geofencesAPI = {
+  getByChildId: async (childId) => {
+    return apiRequest(`/api/geofences/child/${childId}`);
+  },
+  create: async (childId, geofenceData) => {
+    return apiRequest(`/api/geofences/child/${childId}`, {
+      method: 'POST',
+      body: JSON.stringify(geofenceData),
+    });
+  },
+  update: async (geofenceId, geofenceData) => {
+    return apiRequest(`/api/geofences/${geofenceId}`, {
+      method: 'PUT',
+      body: JSON.stringify(geofenceData),
+    });
+  },
+  delete: async (geofenceId) => {
+    return apiRequest(`/api/geofences/${geofenceId}`, {
+      method: 'DELETE',
+    });
+  },
+  getEvents: async (childId, hours = 24) => {
+    return apiRequest(`/api/geofences/child/${childId}/events?hours=${hours}`);
+  },
+};
+
 export default apiRequest;
 

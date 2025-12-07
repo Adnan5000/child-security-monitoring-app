@@ -163,6 +163,9 @@ export const locationsAPI = {
   getChildrenLocations: async () => {
     return apiRequest('/api/locations/children');
   },
+  getChildHistory: async (childId, hours = 24) => {
+    return apiRequest(`/api/locations/child/${childId}/history?hours=${hours}`);
+  },
 
   // Get a specific child's current location
   getChildLocation: async (childId) => {
@@ -245,6 +248,33 @@ export const shakeDetectorAPI = {
       method: 'POST',
       body: JSON.stringify(detectorData),
     });
+  },
+};
+
+// Geofences API
+export const geofencesAPI = {
+  getByChildId: async (childId) => {
+    return apiRequest(`/api/geofences/child/${childId}`);
+  },
+  create: async (childId, geofenceData) => {
+    return apiRequest(`/api/geofences/child/${childId}`, {
+      method: 'POST',
+      body: JSON.stringify(geofenceData),
+    });
+  },
+  update: async (geofenceId, geofenceData) => {
+    return apiRequest(`/api/geofences/${geofenceId}`, {
+      method: 'PUT',
+      body: JSON.stringify(geofenceData),
+    });
+  },
+  delete: async (geofenceId) => {
+    return apiRequest(`/api/geofences/${geofenceId}`, {
+      method: 'DELETE',
+    });
+  },
+  getEvents: async (childId, hours = 24) => {
+    return apiRequest(`/api/geofences/child/${childId}/events?hours=${hours}`);
   },
 };
 

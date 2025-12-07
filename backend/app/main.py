@@ -9,6 +9,7 @@ from app.devices.routes import router as devices_router
 from app.emergency_contacts.routes import router as emergency_contacts_router
 from app.locations.routes import router as locations_router
 from app.shake_detectors.routes import router as shake_detectors_router
+from app.geofences.routes import router as geofences_router
 
 app = FastAPI(
     title="Child Security Monitoring API",
@@ -33,6 +34,7 @@ app.include_router(emergency_contacts_router)
 app.include_router(alerts_router)
 app.include_router(devices_router)
 app.include_router(shake_detectors_router)
+app.include_router(geofences_router)
 
 
 @app.on_event("startup")

@@ -9,6 +9,8 @@ import EditChild from './pages/EditChild'
 import EmergencyContacts from './pages/EmergencyContacts'
 import Alerts from './pages/Alerts'
 import ShakeDetector from './pages/ShakeDetector'
+import Geofences from './pages/Geofences'
+import LocationHistory from './pages/LocationHistory'
 import './App.css'
 
 // Protected Route Component
@@ -96,6 +98,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ShakeDetector />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/geofences" 
+          element={
+            <ProtectedRoute>
+              <Geofences />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/location-history/:childId?" 
+          element={
+            <ProtectedRoute>
+              <LocationHistory />
             </ProtectedRoute>
           } 
         />

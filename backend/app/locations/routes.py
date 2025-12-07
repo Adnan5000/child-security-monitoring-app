@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from typing import List
@@ -250,10 +250,106 @@ async def get_child_location_history(
     ]
 
 
+async def check_geofences_task(child_id: str, location_id: str, lat: float, lon: float, db: Session):
+    """Background task to check geofence transitions"""
+    from app.geofences.service import (
+        check_geofence_transitions,
+        create_geofence_event,
+        create_geofence_alert,
+    )
+    from app.models.child import Child
+    from app.models.location import Location
+    from app.models.alert import AlertDistribution
+    from app.notifications.service import notification_service
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        child = db.query(Child).filter(Child.child_id == child_id).first()
+        if not child:
+            logger.warning(f"Child {child_id} not found for geofence check")
+            return
+
+        location = db.query(Location).filter(Location.location_id == location_id).first()
+
+        # Check for geofence transitions
+        entry_events, exit_events = check_geofence_transitions(
+            child_id, lat, lon, location_id, db
+        )
+
+        # Process entry events
+        for geofence in entry_events:
+            event = create_geofence_event(
+                geofence, child, location_id, "ENTRY", lat, lon, db
+            )
+            alert = create_geofence_alert(
+                geofence, child, location_id, "ENTRY", db
+            )
+            db.flush()
+
+            # Distribute alert to emergency contacts
+            if child.parent.emergency_contacts:
+                distribution = AlertDistribution(alert_id=alert.alert_id)
+                distribution.emergency_contacts = child.parent.emergency_contacts
+                db.add(distribution)
+
+            db.commit()
+
+            # Send notifications
+            if child.parent.emergency_contacts:
+                location_info = notification_service.get_location_string(alert)
+                notification_service.send_alert_notifications(
+                    alert=alert,
+                    contacts=child.parent.emergency_contacts,
+                    location_info=location_info
+                )
+                alert.status = "SENT"
+                db.commit()
+
+            logger.info(f"Geofence entry event created for {geofence.name}")
+
+        # Process exit events
+        for geofence in exit_events:
+            event = create_geofence_event(
+                geofence, child, location_id, "EXIT", lat, lon, db
+            )
+            alert = create_geofence_alert(
+                geofence, child, location_id, "EXIT", db
+            )
+            db.flush()
+
+            # Distribute alert to emergency contacts
+            if child.parent.emergency_contacts:
+                distribution = AlertDistribution(alert_id=alert.alert_id)
+                distribution.emergency_contacts = child.parent.emergency_contacts
+                db.add(distribution)
+
+            db.commit()
+
+            # Send notifications
+            if child.parent.emergency_contacts:
+                location_info = notification_service.get_location_string(alert)
+                notification_service.send_alert_notifications(
+                    alert=alert,
+                    contacts=child.parent.emergency_contacts,
+                    location_info=location_info
+                )
+                alert.status = "SENT"
+                db.commit()
+
+            logger.info(f"Geofence exit event created for {geofence.name}")
+
+    except Exception as e:
+        logger.error(f"Error checking geofences: {e}", exc_info=True)
+        db.rollback()
+
+
 @router.put("/child/{child_id}", response_model=LocationResponse)
 async def update_child_location(
     child_id: str,
     location_data: LocationUpdate,
+    background_tasks: BackgroundTasks,
     current_parent: Parent = Depends(get_current_parent),
     db: Session = Depends(get_db)
 ):
@@ -296,6 +392,17 @@ async def update_child_location(
         "timestamp": new_location.timestamp.isoformat()
     }
     set_location(str(child.child_id), location_cache, ttl=300)
+    
+    # Check geofences in background
+    from app.database import SessionLocal
+    background_tasks.add_task(
+        check_geofences_task,
+        str(child.child_id),
+        str(new_location.location_id),
+        new_location.latitude,
+        new_location.longitude,
+        SessionLocal()
+    )
     
     return LocationResponse(
         location_id=str(new_location.location_id),

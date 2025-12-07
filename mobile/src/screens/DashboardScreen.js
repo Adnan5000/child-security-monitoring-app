@@ -155,6 +155,13 @@ function DashboardScreen({ navigation }) {
               <Text style={styles.actionIcon}>📱</Text>
               <Text style={styles.actionText}>Shake Detection</Text>
             </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionItem}
+              onPress={() => navigation.navigate('LocationHistory')}
+            >
+              <Text style={styles.actionIcon}>📍</Text>
+              <Text style={styles.actionText}>Location History</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
