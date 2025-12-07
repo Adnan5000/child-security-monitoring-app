@@ -11,6 +11,7 @@ import EditChildScreen from '../screens/EditChildScreen';
 import LocationTrackingScreen from '../screens/LocationTrackingScreen';
 import EmergencyContactsScreen from '../screens/EmergencyContactsScreen';
 import AlertsScreen from '../screens/AlertsScreen';
+import ShakeDetectorScreen from '../screens/ShakeDetectorScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +56,7 @@ function AppNavigator() {
             <Stack.Screen name="LocationTracking" component={LocationTrackingScreen} />
             <Stack.Screen name="EmergencyContacts" component={EmergencyContactsScreen} />
             <Stack.Screen name="Alerts" component={AlertsScreen} />
+            <Stack.Screen name="ShakeDetector" component={ShakeDetectorScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
           </>
