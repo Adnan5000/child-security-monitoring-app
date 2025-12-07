@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { childrenAPI, alertsAPI } from '../services/api';
 import locationService from '../services/locationService';
+import shakeDetectionService from '../services/shakeDetectionService';
 
 function LocationTrackingScreen({ navigation }) {
   const [children, setChildren] = useState([]);
@@ -19,10 +20,17 @@ function LocationTrackingScreen({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [sendingSOS, setSendingSOS] = useState(false);
+  const [isShakeMonitoring, setIsShakeMonitoring] = useState(false);
 
   useEffect(() => {
     loadChildren();
     checkTrackingStatus();
+    checkShakeStatus();
+    
+    // Cleanup on unmount
+    return () => {
+      shakeDetectionService.stopMonitoring();
+    };
   }, []);
 
   const loadChildren = async () => {
@@ -44,6 +52,10 @@ function LocationTrackingScreen({ navigation }) {
     setIsTracking(locationService.isActive());
   };
 
+  const checkShakeStatus = () => {
+    setIsShakeMonitoring(shakeDetectionService.isActive());
+  };
+
   const handleStartTracking = async () => {
     if (!selectedChildId) {
       Alert.alert('Error', 'Please select a child first');
@@ -54,12 +66,16 @@ function LocationTrackingScreen({ navigation }) {
       await locationService.startTracking(selectedChildId, 30000); // 30 seconds
       setIsTracking(true);
       
+      // Start shake detection automatically when tracking starts
+      await shakeDetectionService.startMonitoring(selectedChildId);
+      setIsShakeMonitoring(true);
+      
       // Get initial location
       const location = await locationService.getCurrentLocation();
       setCurrentLocation(location);
       setLastUpdate(new Date());
       
-      Alert.alert('Success', 'Location tracking started!');
+      Alert.alert('Success', 'Location tracking and shake detection started!');
     } catch (error) {
       console.error('Error starting tracking:', error);
       Alert.alert('Error', 'Failed to start location tracking. Please check permissions.');
@@ -68,10 +84,12 @@ function LocationTrackingScreen({ navigation }) {
 
   const handleStopTracking = () => {
     locationService.stopTracking();
+    shakeDetectionService.stopMonitoring();
     setIsTracking(false);
+    setIsShakeMonitoring(false);
     setCurrentLocation(null);
     setLastUpdate(null);
-    Alert.alert('Stopped', 'Location tracking stopped');
+    Alert.alert('Stopped', 'Location tracking and shake detection stopped');
   };
 
   const handleTestLocation = async () => {
@@ -185,7 +203,7 @@ function LocationTrackingScreen({ navigation }) {
               <Text style={styles.sectionTitle}>Location Status</Text>
               <View style={styles.statusCard}>
                 <View style={styles.statusRow}>
-                  <Text style={styles.statusLabel}>Tracking:</Text>
+                  <Text style={styles.statusLabel}>Location Tracking:</Text>
                   <Text
                     style={[
                       styles.statusValue,
@@ -193,6 +211,17 @@ function LocationTrackingScreen({ navigation }) {
                     ]}
                   >
                     {isTracking ? 'Active' : 'Inactive'}
+                  </Text>
+                </View>
+                <View style={styles.statusRow}>
+                  <Text style={styles.statusLabel}>Shake Detection:</Text>
+                  <Text
+                    style={[
+                      styles.statusValue,
+                      isShakeMonitoring ? styles.statusActive : styles.statusInactive,
+                    ]}
+                  >
+                    {isShakeMonitoring ? 'Active' : 'Inactive'}
                   </Text>
                 </View>
                 {currentLocation && (

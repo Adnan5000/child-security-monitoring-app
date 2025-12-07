@@ -125,6 +125,10 @@ function Dashboard() {
               <span className="action-icon">🚨</span>
               <span>Alerts</span>
             </div>
+            <div className="action-item" onClick={() => navigate('/shake-detector')}>
+              <span className="action-icon">📱</span>
+              <span>Shake Detection</span>
+            </div>
             <div className="action-item" onClick={() => navigate('/dashboard#map')}>
               <span className="action-icon">📍</span>
               <span>View Locations</span>

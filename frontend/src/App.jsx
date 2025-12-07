@@ -8,6 +8,7 @@ import AddChild from './pages/AddChild'
 import EditChild from './pages/EditChild'
 import EmergencyContacts from './pages/EmergencyContacts'
 import Alerts from './pages/Alerts'
+import ShakeDetector from './pages/ShakeDetector'
 import './App.css'
 
 // Protected Route Component
@@ -87,6 +88,14 @@ function App() {
           element={
             <ProtectedRoute>
               <EditChild />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/shake-detector" 
+          element={
+            <ProtectedRoute>
+              <ShakeDetector />
             </ProtectedRoute>
           } 
         />

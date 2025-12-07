@@ -221,5 +221,26 @@ export const deviceStatusAPI = {
   },
 };
 
+export const shakeDetectorAPI = {
+  getAll: async () => {
+    return apiRequest('/api/shake-detectors');
+  },
+  getByChildId: async (childId) => {
+    return apiRequest(`/api/shake-detectors/child/${childId}`);
+  },
+  update: async (childId, detectorData) => {
+    return apiRequest(`/api/shake-detectors/child/${childId}`, {
+      method: 'PUT',
+      body: JSON.stringify(detectorData),
+    });
+  },
+  create: async (childId, detectorData) => {
+    return apiRequest(`/api/shake-detectors/child/${childId}`, {
+      method: 'POST',
+      body: JSON.stringify(detectorData),
+    });
+  },
+};
+
 export default apiRequest;
 

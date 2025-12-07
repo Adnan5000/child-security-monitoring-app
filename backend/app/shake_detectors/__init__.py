@@ -1,0 +1,2 @@
+# Shake Detector module
+

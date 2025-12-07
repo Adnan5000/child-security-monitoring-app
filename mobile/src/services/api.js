@@ -226,6 +226,28 @@ export const deviceStatusAPI = {
   listStatuses: async () => apiRequest('/api/devices/status'),
 };
 
+// Shake Detector API
+export const shakeDetectorAPI = {
+  getByChildId: async (childId) => {
+    return apiRequest(`/api/shake-detectors/child/${childId}`);
+  },
+  getAll: async () => {
+    return apiRequest('/api/shake-detectors');
+  },
+  update: async (childId, detectorData) => {
+    return apiRequest(`/api/shake-detectors/child/${childId}`, {
+      method: 'PUT',
+      body: JSON.stringify(detectorData),
+    });
+  },
+  create: async (childId, detectorData) => {
+    return apiRequest(`/api/shake-detectors/child/${childId}`, {
+      method: 'POST',
+      body: JSON.stringify(detectorData),
+    });
+  },
+};
+
 // Helper to set API base URL (for physical device testing)
 export const setApiBaseUrl = (url) => {
   // This would require a more sophisticated setup
