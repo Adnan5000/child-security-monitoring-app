@@ -42,6 +42,7 @@ async def list_device_statuses(
                 device_id=status.device_id,
                 battery_level=status.battery_level,
                 network_status=status.network_status,
+                network_type=status.network_type,
                 app_status=status.app_status,
                 last_update=status.last_update,
                 updated_at=status.updated_at,
@@ -117,6 +118,8 @@ async def upsert_device_status(
             status_record.battery_level = status_data.battery_level
         if status_data.network_status is not None:
             status_record.network_status = status_data.network_status
+        if status_data.network_type is not None:
+            status_record.network_type = status_data.network_type
         if status_data.app_status is not None:
             status_record.app_status = status_data.app_status
 
@@ -127,6 +130,7 @@ async def upsert_device_status(
             device_id=status_data.device_id or child.device_id,
             battery_level=status_data.battery_level,
             network_status=status_data.network_status,
+            network_type=status_data.network_type,
             app_status=status_data.app_status,
             last_update=now,
         )

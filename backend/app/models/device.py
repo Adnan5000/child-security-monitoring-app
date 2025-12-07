@@ -12,8 +12,9 @@ class DeviceStatus(Base):
     device_id = Column(String(255), primary_key=True, index=True)
     child_id = Column(UUID(as_uuid=True), ForeignKey("children.child_id", ondelete="CASCADE"), nullable=False, unique=True)
     battery_level = Column(Integer, nullable=True)  # Percentage 0-100
-    network_status = Column(String(50), nullable=True)  # e.g., "WiFi", "4G", "5G", "Offline"
-    app_status = Column(String(50), nullable=True)  # e.g., "Active", "Background", "Killed"
+    network_status = Column(String(50), nullable=True)  # e.g., "Online (WiFi)", "Online (5G)", "Offline"
+    network_type = Column(String(50), nullable=True)  # e.g., "WiFi", "4G", "5G", "3G", "2G", "Ethernet", "None"
+    app_status = Column(String(50), nullable=True)  # e.g., "Active", "Background", "Inactive"
     last_update = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

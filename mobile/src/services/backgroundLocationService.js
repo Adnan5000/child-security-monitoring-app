@@ -3,6 +3,7 @@ import { Platform, AppState } from 'react-native';
 import { locationsAPI, deviceStatusAPI } from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackgroundFetch from 'react-native-background-fetch';
+import deviceTelemetryService from './deviceTelemetryService';
 
 class BackgroundLocationService {
   constructor() {
@@ -42,11 +43,8 @@ class BackgroundLocationService {
 
       await locationsAPI.updateLocation(childId, locationData);
       
-      // Also update device status
-      await deviceStatusAPI.updateStatus(childId, {
-        app_status: 'Background',
-        network_status: 'Online',
-      });
+      // Use telemetry service for enhanced device status
+      await deviceTelemetryService.sendTelemetry(childId);
       
       console.log('Background location update sent successfully');
       return true;

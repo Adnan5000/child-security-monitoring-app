@@ -3,6 +3,7 @@ import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import { locationsAPI, deviceStatusAPI } from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import backgroundLocationService from './backgroundLocationService';
+import deviceTelemetryService from './deviceTelemetryService';
 
 class LocationService {
   constructor() {
@@ -182,6 +183,14 @@ class LocationService {
       console.warn('Failed to start background service, continuing with foreground only:', error);
     }
 
+    // Start device telemetry monitoring
+    try {
+      await deviceTelemetryService.startMonitoring(resolvedChildId, 60000); // Update every 60 seconds
+      console.log('Device telemetry monitoring started');
+    } catch (error) {
+      console.warn('Failed to start telemetry monitoring:', error);
+    }
+
     // Send initial location
     try {
       const location = await this.getCurrentLocation();
@@ -200,11 +209,8 @@ class LocationService {
       try {
         const location = await this.getCurrentLocation();
         await this.sendLocationUpdate(location);
-        await this.sendDeviceStatus({
-          childId: resolvedChildId,
-          app_status: 'Active',
-          network_status: 'Online',
-        });
+        // Telemetry service handles device status updates automatically
+        await deviceTelemetryService.sendTelemetry(resolvedChildId);
       } catch (error) {
         console.error('Error in periodic location update:', error);
       }
@@ -226,6 +232,13 @@ class LocationService {
       await backgroundLocationService.stopBackgroundTracking();
     } catch (error) {
       console.error('Error stopping background service:', error);
+    }
+
+    // Stop device telemetry monitoring
+    try {
+      deviceTelemetryService.stopMonitoring();
+    } catch (error) {
+      console.error('Error stopping telemetry monitoring:', error);
     }
 
     if (this.updateInterval) {
@@ -255,18 +268,14 @@ class LocationService {
   }
 
   async sendDeviceStatus({ childId, app_status, network_status }) {
+    // Use telemetry service for enhanced device status
     try {
       const targetChildId = childId || this.lastChildId || (await this.getChildId());
       if (!targetChildId) {
         return;
       }
-
-      await deviceStatusAPI.updateStatus(targetChildId, {
-        device_id: this.childId || targetChildId,
-        battery_level: null,
-        network_status,
-        app_status,
-      });
+      // Telemetry service will collect and send all device info
+      await deviceTelemetryService.sendTelemetry(targetChildId);
     } catch (error) {
       console.error('Error sending device status:', error);
     }
