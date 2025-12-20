@@ -144,79 +144,100 @@ class LocationService {
 
   // Start location tracking
   async startTracking(childId, intervalMs = 30000) {
-    if (this.isTracking) {
-      console.log('Location tracking already started');
-      return;
-    }
-
-    // Request permissions first
-    const hasPermission = await this.requestPermissions();
-    if (!hasPermission) {
-      return;
-    }
-
-    // Set child ID
-    let resolvedChildId = childId;
-    if (resolvedChildId) {
-      await this.setChildId(resolvedChildId);
-    } else {
-      const storedChildId = await this.getChildId();
-      if (!storedChildId) {
-        Alert.alert(
-          'Child ID Required',
-          'Please set up your child profile first before starting location tracking.'
-        );
+    try {
+      if (this.isTracking) {
+        console.log('Location tracking already started');
         return;
       }
-      resolvedChildId = storedChildId;
-    }
 
-    this.isTracking = true;
-    this.lastChildId = resolvedChildId;
-    this.updateIntervalMs = intervalMs;
-
-    // Start background tracking service
-    try {
-      await backgroundLocationService.startBackgroundTracking(resolvedChildId, intervalMs);
-      console.log('Background location service started');
-    } catch (error) {
-      console.warn('Failed to start background service, continuing with foreground only:', error);
-    }
-
-    // Start device telemetry monitoring
-    try {
-      await deviceTelemetryService.startMonitoring(resolvedChildId, 60000); // Update every 60 seconds
-      console.log('Device telemetry monitoring started');
-    } catch (error) {
-      console.warn('Failed to start telemetry monitoring:', error);
-    }
-
-    // Send initial location
-    try {
-      const location = await this.getCurrentLocation();
-      await this.sendLocationUpdate(location);
-      await this.sendDeviceStatus({
-        childId: resolvedChildId,
-        app_status: 'Active',
-        network_status: 'Online',
-      });
-    } catch (error) {
-      console.error('Error getting initial location:', error);
-    }
-
-    // Set up periodic location updates (foreground)
-    this.updateInterval = setInterval(async () => {
-      try {
-        const location = await this.getCurrentLocation();
-        await this.sendLocationUpdate(location);
-        // Telemetry service handles device status updates automatically
-        await deviceTelemetryService.sendTelemetry(resolvedChildId);
-      } catch (error) {
-        console.error('Error in periodic location update:', error);
+      // Request permissions first
+      const hasPermission = await this.requestPermissions();
+      if (!hasPermission) {
+        throw new Error('Location permissions not granted');
       }
-    }, this.updateIntervalMs);
 
-    console.log(`Location tracking started (updates every ${this.updateIntervalMs / 1000}s)`);
+      // Set child ID
+      let resolvedChildId = childId;
+      if (resolvedChildId) {
+        await this.setChildId(resolvedChildId);
+      } else {
+        const storedChildId = await this.getChildId();
+        if (!storedChildId) {
+          Alert.alert(
+            'Child ID Required',
+            'Please set up your child profile first before starting location tracking.'
+          );
+          throw new Error('Child ID required');
+        }
+        resolvedChildId = storedChildId;
+      }
+
+      this.isTracking = true;
+      this.lastChildId = resolvedChildId;
+      this.updateIntervalMs = intervalMs;
+
+      // Start background tracking service (non-blocking)
+      backgroundLocationService.startBackgroundTracking(resolvedChildId, intervalMs)
+        .then(() => {
+          console.log('Background location service started');
+        })
+        .catch((error) => {
+          console.warn('Failed to start background service, continuing with foreground only:', error);
+          // Continue without background - foreground tracking will work
+        });
+
+      // Start device telemetry monitoring (non-blocking)
+      deviceTelemetryService.startMonitoring(resolvedChildId, 60000)
+        .then(() => {
+          console.log('Device telemetry monitoring started');
+        })
+        .catch((error) => {
+          console.warn('Failed to start telemetry monitoring:', error);
+          // Continue without telemetry
+        });
+
+      // Send initial location (non-blocking)
+      this.getCurrentLocation()
+        .then(async (location) => {
+          try {
+            await this.sendLocationUpdate(location);
+            await this.sendDeviceStatus({
+              childId: resolvedChildId,
+              app_status: 'Active',
+              network_status: 'Online',
+            });
+          } catch (error) {
+            console.error('Error sending initial location update:', error);
+          }
+        })
+        .catch((error) => {
+          console.error('Error getting initial location:', error);
+          // Continue anyway - periodic updates will work
+        });
+
+      // Set up periodic location updates (foreground)
+      this.updateInterval = setInterval(async () => {
+        try {
+          const location = await this.getCurrentLocation();
+          await this.sendLocationUpdate(location);
+          // Telemetry service handles device status updates automatically
+          try {
+            await deviceTelemetryService.sendTelemetry(resolvedChildId);
+          } catch (telemetryError) {
+            console.warn('Telemetry update failed:', telemetryError);
+          }
+        } catch (error) {
+          console.error('Error in periodic location update:', error);
+        }
+      }, this.updateIntervalMs);
+
+      console.log(`Location tracking started (updates every ${this.updateIntervalMs / 1000}s)`);
+    } catch (error) {
+      // Reset tracking state on error
+      this.isTracking = false;
+      console.error('Error starting location tracking:', error);
+      throw error; // Re-throw so caller can handle it
+    }
   }
 
   // Stop location tracking

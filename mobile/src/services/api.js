@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Current MacBook IP: 192.168.0.29
 
 // Set this to 'emulator' to test on Android emulator, or 'device' for physical device
-const DEVICE_TYPE = 'device'; // Change to 'emulator' if using Android emulator
+const DEVICE_TYPE = 'emulator'; // Change to 'emulator' if using Android emulator
 
 const API_BASE_URL = DEVICE_TYPE === 'emulator' 
   ? 'http://10.0.2.2:8000' // Android emulator - maps to localhost on MacBook
@@ -82,7 +82,19 @@ const apiRequest = async (endpoint, options = {}) => {
     throw new Error(errorMessage);
   }
 
-  return response.json();
+  // Handle 204 No Content responses (e.g., DELETE requests)
+  if (response.status === 204 || response.statusText === 'No Content') {
+    return null;
+  }
+
+  // Check if response has content before parsing JSON
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  return null;
 };
 
 // Authentication API

@@ -312,7 +312,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   hourButton: {
-    padding: 10px 16px,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
     borderWidth: 2,

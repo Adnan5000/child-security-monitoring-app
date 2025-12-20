@@ -27,22 +27,36 @@ function LocationTrackingScreen({ navigation }) {
     checkTrackingStatus();
     checkShakeStatus();
     
+    // Reload children when screen comes into focus
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadChildren();
+      checkTrackingStatus();
+      checkShakeStatus();
+    });
+    
     // Cleanup on unmount
     return () => {
+      unsubscribe();
       shakeDetectionService.stopMonitoring();
     };
-  }, []);
+  }, [navigation]);
 
   const loadChildren = async () => {
     try {
+      setLoading(true);
       const data = await childrenAPI.getAll();
-      setChildren(data);
-      if (data.length === 1) {
+      setChildren(data || []);
+      if (data && data.length === 1) {
         // Auto-select if only one child
+        setSelectedChildId(data[0].child_id);
+      } else if (data && data.length > 0 && !selectedChildId) {
+        // Auto-select first child if none selected
         setSelectedChildId(data[0].child_id);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to load children');
+      console.error('Error loading children:', error);
+      Alert.alert('Error', error.message || 'Failed to load children. Please check your connection.');
+      setChildren([]);
     } finally {
       setLoading(false);
     }
@@ -63,22 +77,39 @@ function LocationTrackingScreen({ navigation }) {
     }
 
     try {
+      // Start location tracking
       await locationService.startTracking(selectedChildId, 30000); // 30 seconds
       setIsTracking(true);
       
-      // Start shake detection automatically when tracking starts
-      await shakeDetectionService.startMonitoring(selectedChildId);
-      setIsShakeMonitoring(true);
+      // Start shake detection (non-blocking - don't fail if this fails)
+      shakeDetectionService.startMonitoring(selectedChildId)
+        .then(() => {
+          setIsShakeMonitoring(true);
+        })
+        .catch((error) => {
+          console.warn('Shake detection failed to start:', error);
+          // Continue without shake detection
+        });
       
-      // Get initial location
-      const location = await locationService.getCurrentLocation();
-      setCurrentLocation(location);
-      setLastUpdate(new Date());
+      // Get initial location (non-blocking)
+      locationService.getCurrentLocation()
+        .then((location) => {
+          setCurrentLocation(location);
+          setLastUpdate(new Date());
+        })
+        .catch((error) => {
+          console.warn('Could not get initial location:', error);
+          // Continue anyway - tracking is still active
+        });
       
-      Alert.alert('Success', 'Location tracking and shake detection started!');
+      Alert.alert('Success', 'Location tracking started!');
     } catch (error) {
       console.error('Error starting tracking:', error);
-      Alert.alert('Error', 'Failed to start location tracking. Please check permissions.');
+      setIsTracking(false);
+      Alert.alert(
+        'Error', 
+        error.message || 'Failed to start location tracking. Please check permissions and try again.'
+      );
     }
   };
 

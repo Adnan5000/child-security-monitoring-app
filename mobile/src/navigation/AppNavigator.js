@@ -47,28 +47,19 @@ function AppNavigator() {
           headerShown: false,
           contentStyle: { backgroundColor: '#f5f5f5' },
         }}
+        initialRouteName={isAuthenticated ? "Dashboard" : "Login"}
       >
-        {isAuthenticated ? (
-          <>
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
-            <Stack.Screen name="ChildrenList" component={ChildrenListScreen} />
-            <Stack.Screen name="AddChild" component={AddChildScreen} />
-            <Stack.Screen name="EditChild" component={EditChildScreen} />
-            <Stack.Screen name="LocationTracking" component={LocationTrackingScreen} />
-            <Stack.Screen name="EmergencyContacts" component={EmergencyContactsScreen} />
-            <Stack.Screen name="Alerts" component={AlertsScreen} />
-            <Stack.Screen name="ShakeDetector" component={ShakeDetectorScreen} />
-            <Stack.Screen name="LocationHistory" component={LocationHistoryScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
-          </>
-        )}
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        <Stack.Screen name="ChildrenList" component={ChildrenListScreen} />
+        <Stack.Screen name="AddChild" component={AddChildScreen} />
+        <Stack.Screen name="EditChild" component={EditChildScreen} />
+        <Stack.Screen name="LocationTracking" component={LocationTrackingScreen} />
+        <Stack.Screen name="EmergencyContacts" component={EmergencyContactsScreen} />
+        <Stack.Screen name="Alerts" component={AlertsScreen} />
+        <Stack.Screen name="ShakeDetector" component={ShakeDetectorScreen} />
+        <Stack.Screen name="LocationHistory" component={LocationHistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

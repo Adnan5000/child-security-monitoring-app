@@ -46,11 +46,13 @@ function ChildrenListScreen({ navigation }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await childrenAPI.delete(childId);
+              const result = await childrenAPI.delete(childId);
+              // Handle 204 No Content response (result will be null)
               Alert.alert('Success', 'Child deleted successfully');
               loadChildren();
             } catch (err) {
-              Alert.alert('Error', err.message || 'Failed to delete child');
+              console.error('Delete error:', err);
+              Alert.alert('Error', err.message || 'Failed to delete child. Please try again.');
             }
           },
         },

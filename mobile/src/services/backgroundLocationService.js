@@ -131,22 +131,28 @@ class BackgroundLocationService {
       // Store child ID
       await AsyncStorage.setItem('childId', childId);
 
-      // Configure background fetch
-      await BackgroundFetch.configure(
-        {
-          minimumFetchInterval: Math.floor(intervalMs / 1000), // Convert to seconds
-          stopOnTerminate: false, // Continue after app termination
-          startOnBoot: true, // Start on device boot
-          enableHeadless: true, // Enable headless mode
-          requiredNetworkType: BackgroundFetch.NETWORK_TYPE_ANY,
-        },
-        async (taskId) => {
-          await this.onBackgroundFetch(taskId);
-        },
-        async (error) => {
-      console.error('[BackgroundFetch] Failed to start:', error);
-        }
-      );
+      // Configure background fetch with error handling
+      try {
+        await BackgroundFetch.configure(
+          {
+            minimumFetchInterval: Math.floor(intervalMs / 1000), // Convert to seconds
+            stopOnTerminate: false, // Continue after app termination
+            startOnBoot: true, // Start on device boot
+            enableHeadless: true, // Enable headless mode
+            requiredNetworkType: BackgroundFetch.NETWORK_TYPE_ANY,
+          },
+          async (taskId) => {
+            await this.onBackgroundFetch(taskId);
+          },
+          async (error) => {
+            console.error('[BackgroundFetch] Failed to start:', error);
+          }
+        );
+        console.log('[BackgroundFetch] Configured successfully');
+      } catch (configError) {
+        console.warn('[BackgroundFetch] Configuration failed, continuing without background fetch:', configError);
+        // Continue without background fetch - foreground tracking will still work
+      }
 
       // Listen to app state changes
       this.appStateListener = AppState.addEventListener('change', this.handleAppStateChange);
